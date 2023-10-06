@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { Input, DynamicTable } from "@/components";
+import { CustomInput, DynamicTable } from "@/components";
 import { AiOutlinePlus, AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai'
 import { BsFiletypeXlsx } from 'react-icons/bs'
 import * as XLSX from 'xlsx';
@@ -270,14 +270,14 @@ export default function HomePage() {
         <div className=" flex flex-col lg:flex-row gap-5">
             <div>
                 <form className="mx-auto flex flex-col gap-5 p-5" >
-                    <Input
-                        fieldName={'Email'}
+                    <CustomInput
+                        title={'Email'}
                         handleChange={(e) => setUserData({ email: e.target.value, password: userData.password })}
                         color={'primary'}
                         value={userData.email}
                     />
-                    <Input
-                        fieldName={'Password'}
+                    <CustomInput
+                        title={'Password'}
                         handleChange={(e) => setUserData({ email: userData.email, password: e.target.value })}
                         color={'primary'}
                         value={userData.password}

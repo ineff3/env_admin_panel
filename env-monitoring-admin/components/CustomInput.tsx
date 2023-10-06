@@ -1,8 +1,8 @@
 'use client';
 import React from 'react'
+import { CustomInputProps } from '@/types';
 
-
-const Input = ({ fieldName, handleChange, color, value }) => {
+const CustomInput = ({ title = "CustomInput", handleChange, color, value }: CustomInputProps) => {
     return (
         <div id='input-container'
             className={`flex py-2 pl-5 pr-2 rounded-md border-gray-300 border-2 focus-within:border-${color} hover:focus-within:border-${color} relative group`}>
@@ -14,9 +14,9 @@ const Input = ({ fieldName, handleChange, color, value }) => {
                 value={value || ''}
             >
             </input>
-            <div className={`absolute text-gray-400  text-mg block bg-white myInputLabel`}>{fieldName}</div>
+            <div className={`absolute text-gray-400  text-mg block bg-white myInputLabel`}>{title}</div>
         </div>
     )
 }
 
-export default Input
+export default CustomInput;
