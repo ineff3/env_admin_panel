@@ -1,8 +1,9 @@
 'use client';
+import { DynamicTableProps } from "@/types";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, getKeyValue } from "@nextui-org/react";
 
 
-const DynamicTable = ({ users, columns, isLoading, selectedRow, setSelectedRow }) => {
+const DynamicTable = ({ users, columns, isLoading, selectedRow, setSelectedRow }: DynamicTableProps) => {
     return (
 
         <Table

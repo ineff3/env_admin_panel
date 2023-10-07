@@ -1,10 +1,10 @@
 'use client';
+
 import { Navbar, Header } from "@/components";
 import { useState } from "react";
 
-export default function DashboardLayout({
-    children,
-}) {
+
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const [nav, setNav] = useState(false);
 
     const handleNav = () => {

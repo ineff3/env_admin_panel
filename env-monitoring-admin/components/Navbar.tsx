@@ -3,13 +3,14 @@ import Link from 'next/link'
 import { RxDashboard } from 'react-icons/rx'
 import { PiFactory, PiNewspaperClipping, PiTrash, PiGear } from 'react-icons/pi'
 import { usePathname } from 'next/navigation'
+import { NavbarProps } from '@/types';
 
 
-const Navbar = ({ handleNav }) => {
+const Navbar = ({ handleNav }: NavbarProps) => {
 
     const pathname = usePathname();
 
-    const checkNavClick = (e) => {
+    const checkNavClick = () => {
         if (window.innerWidth >= 768) return;
         setTimeout(handleNav, 500)
     }

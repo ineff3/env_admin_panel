@@ -1,11 +1,12 @@
 import Navbar from "./Navbar";
 import Header from "./Header";
 import CustomInput from "./CustomInput";
-import DynamicTable from "./DynamicTable";
+import DynamicTable from "./DynamicTable"
+
 export {
-    Navbar,
-    Header,
     CustomInput,
-    DynamicTable,
+    Header,
+    Navbar,
+    DynamicTable
 
 }

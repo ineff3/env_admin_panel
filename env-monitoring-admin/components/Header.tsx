@@ -2,8 +2,9 @@
 
 import { SlMenu } from 'react-icons/sl'
 import { AiOutlineClose } from 'react-icons/ai'
+import { HeaderProps } from '@/types';
 
-const Header = ({ nav, handleNav }) => {
+const Header = ({ nav, handleNav }: HeaderProps) => {
     return (
         <div className='flex gap-3 items-center text-primary px-3 md:px-0'>
             <div onClick={handleNav} className=' md:hidden '>

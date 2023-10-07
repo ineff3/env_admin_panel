@@ -5,9 +5,12 @@ import { CustomInput, DynamicTable } from "@/components";
 import { AiOutlinePlus, AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai'
 import { BsFiletypeXlsx } from 'react-icons/bs'
 import * as XLSX from 'xlsx';
+import { UserColumns, User, UserData } from "@/types";
+import { Selection } from "@nextui-org/react";
+
 
 //Keys should be as the passed items properties
-const columns = [
+const columns: UserColumns[] = [
     {
         name: 'ID',
         key: 'user_id'
@@ -23,22 +26,22 @@ const columns = [
 ]
 
 export default function HomePage() {
-    const [userData, setUserData] = useState({
+    const [userData, setUserData] = useState<UserData>({
         email: '',
         password: ''
     })
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState<User[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [selectedRow, setSelectedRow] = useState(new Set());
+    const [selectedRow, setSelectedRow] = useState<Selection>(new Set());
 
     //returns user object by id
-    function getUserById(id) {
+    function getUserById(id: string): User | undefined {
         return users.find(user => user.user_id === +id);
     }
     //returns true if one of form inputs is empty
-    function hasEmptyField(obj) {
+    function hasEmptyField(obj: UserData) {
         for (const key in obj) {
-            if (obj.hasOwnProperty(key) && obj[key] === '') {
+            if (obj.hasOwnProperty(key) && obj[key as keyof UserData] === '') {
                 return true;
             }
         }
@@ -46,14 +49,14 @@ export default function HomePage() {
     }
     //Executes whenever selectedRow changes to some actual row
     useEffect(() => {
-        if (selectedRow.size > 0) {
-            const id = selectedRow.values().next().value;
+        if (typeof selectedRow !== 'string' && selectedRow.size > 0) {
+            const id: string = selectedRow.values().next().value;
 
             const selectedUser = getUserById(id)
 
             setUserData({
-                email: selectedUser.email,
-                password: selectedUser.password
+                email: selectedUser?.email,
+                password: selectedUser?.password
             })
         } else {
             setUserData({
@@ -83,7 +86,7 @@ export default function HomePage() {
         fetchData();
     }, []);
 
-    async function addNewUser(e) {
+    async function addNewUser(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
         if (hasEmptyField(userData)) {
             alert('Some fields are empty')
@@ -119,23 +122,21 @@ export default function HomePage() {
         }
     }
 
-    async function editExistingUserData(e) {
+    async function editExistingUserData(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
         if (hasEmptyField(userData)) {
             alert('Some fields are empty')
             return;
         }
-        if (selectedRow.size === 0) {
+        if (typeof selectedRow === 'string' || selectedRow.size === 0) {
             alert("User is not selected")
             return;
         }
-        const userId = selectedRow.values().next().value;
-        const userDataWithId = userData;
-        userDataWithId.id = userId;
+        const userId: string = selectedRow.values().next().value;
         try {
             const response = await fetch('/api/users/edit', {
                 method: 'POST',
-                body: JSON.stringify(userDataWithId),
+                body: JSON.stringify({ id: userId, ...userData }),
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -160,13 +161,13 @@ export default function HomePage() {
         }
     }
 
-    async function deleteUser(e) {
+    async function deleteUser(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault()
         if (hasEmptyField(userData)) {
             alert('Some fields are empty')
             return;
         }
-        if (selectedRow.size === 0) {
+        if (typeof selectedRow === 'string' || selectedRow.size === 0) {
             alert("User is not selected")
             return;
         }
@@ -198,7 +199,7 @@ export default function HomePage() {
 
     }
 
-    async function handleXlsx(e) {
+    async function handleXlsx(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
         const usersArray = await getDataFromXlsx();
         try {
@@ -231,30 +232,34 @@ export default function HomePage() {
             input.accept = '.xlsx';
 
             input.onchange = (event) => {
-                const file = event.target.files[0];
+
+                const inputElement = event.target as HTMLInputElement;
+                const file = inputElement.files?.[0];
                 if (file) {
                     const reader = new FileReader();
 
                     reader.onload = async (e) => {
-                        const data = e.target.result;
+                        const data = e.target?.result;
                         const workbook = XLSX.read(data, { type: 'array' });
                         const sheetName = workbook.SheetNames[0];
                         const worksheet = workbook.Sheets[sheetName];
 
                         //sheet_to_json converts a worksheet object to an array of JSON objects.
-                        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as string[][];
                         const headerRow = jsonData[0];
                         const dataRows = jsonData.slice(1);
 
-                        const dataArray = dataRows.map((row) => {
-                            const obj = {};
-                            headerRow.forEach((header, index) => {
+                        const dataArray = dataRows.map((row: string[]) => {
+                            const obj: { [key: string]: any } = {};
+                            headerRow.forEach((header: string, index: number) => {
                                 obj[header] = row[index];
                             });
                             return obj;
                         });
+                        console.log(dataArray);
 
                         resolve(dataArray);
+
                     };
 
                     reader.readAsArrayBuffer(file);
@@ -271,15 +276,15 @@ export default function HomePage() {
             <div>
                 <form className="mx-auto flex flex-col gap-5 p-5" >
                     <CustomInput
-                        title={'Email'}
+                        title='Email'
                         handleChange={(e) => setUserData({ email: e.target.value, password: userData.password })}
-                        color={'primary'}
+                        color='primary'
                         value={userData.email}
                     />
                     <CustomInput
-                        title={'Password'}
+                        title='Password'
                         handleChange={(e) => setUserData({ email: userData.email, password: e.target.value })}
-                        color={'primary'}
+                        color='primary'
                         value={userData.password}
                     />
                     <div className="flex gap-5 justify-center">
