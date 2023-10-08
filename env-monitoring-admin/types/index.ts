@@ -24,13 +24,14 @@ export interface UserData {
 export interface User extends UserData {
     user_id: number;
 }
-export interface UserColumns {
+
+export interface TableColumns {
     name: string;
     key: string;
 }
 export interface DynamicTableProps {
-    users: User[];
-    columns: UserColumns[];
+    tableItems: User[];
+    tableColumns: TableColumns[];
     isLoading: boolean;
     selectedRow: Selection
     setSelectedRow: (selectedRow: Selection) => void;

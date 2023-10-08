@@ -3,7 +3,7 @@ import { DynamicTableProps } from "@/types";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, getKeyValue } from "@nextui-org/react";
 
 
-const DynamicTable = ({ users, columns, isLoading, selectedRow, setSelectedRow }: DynamicTableProps) => {
+const DynamicTable = ({ tableItems, tableColumns, isLoading, selectedRow, setSelectedRow }: DynamicTableProps) => {
     return (
 
         <Table
@@ -14,14 +14,14 @@ const DynamicTable = ({ users, columns, isLoading, selectedRow, setSelectedRow }
             selectedKeys={selectedRow}
             onSelectionChange={setSelectedRow}
         >
-            <TableHeader columns={columns}>
+            <TableHeader columns={tableColumns}>
                 {(column) => <TableColumn key={column.key}>{column.name}</TableColumn>}
             </TableHeader>
             <TableBody
                 isLoading={isLoading}
                 loadingContent={<Spinner label="Loading..." />}
                 emptyContent={isLoading ? '' : "No rows to display."}
-                items={users}
+                items={tableItems}
             >
                 {(item) => (
                     <TableRow key={item.user_id}>

@@ -5,12 +5,12 @@ import { CustomInput, DynamicTable } from "@/components";
 import { AiOutlinePlus, AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai'
 import { BsFiletypeXlsx } from 'react-icons/bs'
 import * as XLSX from 'xlsx';
-import { UserColumns, User, UserData } from "@/types";
+import { TableColumns, User, UserData } from "@/types";
 import { Selection } from "@nextui-org/react";
 
 
 //Keys should be as the passed items properties
-const columns: UserColumns[] = [
+const columns: TableColumns[] = [
     {
         name: 'ID',
         key: 'user_id'
@@ -324,8 +324,8 @@ export default function HomePage() {
 
             <div className="flex flex-auto">
                 <DynamicTable
-                    users={users}
-                    columns={columns}
+                    tableItems={users}
+                    tableColumns={columns}
                     isLoading={isLoading}
                     selectedRow={selectedRow}
                     setSelectedRow={setSelectedRow}
