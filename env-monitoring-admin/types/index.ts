@@ -36,3 +36,13 @@ export interface DynamicTableProps {
     selectedRow: Selection
     setSelectedRow: (selectedRow: Selection) => void;
 }
+
+export interface CustomButtonSelectionProps {
+    passedData: {}
+    apiRoute: string
+    resetFieldsData: () => void;
+    fieldsCorrect: () => boolean;
+    selectedRow: Selection;
+    resetRow: () => void;
+    setTableData: (tableData: any[]) => void;
+}

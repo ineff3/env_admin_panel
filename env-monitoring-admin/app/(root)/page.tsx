@@ -2,11 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { CustomInput, DynamicTable } from "@/components";
-import { AiOutlinePlus, AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai'
-import { BsFiletypeXlsx } from 'react-icons/bs'
-import * as XLSX from 'xlsx';
 import { TableColumns, User, UserData } from "@/types";
 import { Selection } from "@nextui-org/react";
+import CustomButtonSection from "@/components/CustomButtonSection";
 
 
 //Keys should be as the passed items properties
@@ -47,6 +45,23 @@ export default function HomePage() {
         }
         return false;
     }
+    function fieldsCorrect() {
+        if (hasEmptyField(userData)) {
+            alert('Some fields are empty')
+            return false;
+        }
+        return true;
+    }
+
+    function resetFieldsData() {
+        setUserData({
+            email: '',
+            password: ''
+        });
+    }
+    function resetRow() {
+        setSelectedRow(new Set());
+    }
     //Executes whenever selectedRow changes to some actual row
     useEffect(() => {
         if (typeof selectedRow !== 'string' && selectedRow.size > 0) {
@@ -86,191 +101,6 @@ export default function HomePage() {
         fetchData();
     }, []);
 
-    async function addNewUser(e: React.MouseEvent<HTMLButtonElement>) {
-        e.preventDefault();
-        if (hasEmptyField(userData)) {
-            alert('Some fields are empty')
-            return;
-        }
-        try {
-            const response = await fetch('/api/users', {
-                method: 'POST',
-                body: JSON.stringify(userData),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error: ${response.status}`)
-            }
-            const newUser = await response.json();
-            if (!newUser.hasOwnProperty('exist')) {
-                setUsers((prevUsers) => [...prevUsers, newUser]);
-                // Clearing input fields
-                setUserData({
-                    email: '',
-                    password: ''
-                });
-            } else {
-                alert('Such user already exists')
-            }
-
-        }
-        catch (error) {
-            console.error('Error during fetching', error);
-        }
-    }
-
-    async function editExistingUserData(e: React.MouseEvent<HTMLButtonElement>) {
-        e.preventDefault();
-        if (hasEmptyField(userData)) {
-            alert('Some fields are empty')
-            return;
-        }
-        if (typeof selectedRow === 'string' || selectedRow.size === 0) {
-            alert("User is not selected")
-            return;
-        }
-        const userId: string = selectedRow.values().next().value;
-        try {
-            const response = await fetch('/api/users/edit', {
-                method: 'POST',
-                body: JSON.stringify({ id: userId, ...userData }),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error: ${response.status}`)
-            }
-            setUsers(await fetch('api/users').then(res => res.json()));
-
-            setUserData({
-                email: '',
-                password: ''
-            });
-            setSelectedRow(new Set());
-
-
-
-        }
-        catch (error) {
-            console.error('Error during fetching', error);
-        }
-    }
-
-    async function deleteUser(e: React.MouseEvent<HTMLButtonElement>) {
-        e.preventDefault()
-        if (hasEmptyField(userData)) {
-            alert('Some fields are empty')
-            return;
-        }
-        if (typeof selectedRow === 'string' || selectedRow.size === 0) {
-            alert("User is not selected")
-            return;
-        }
-        const userId = selectedRow.values().next().value;
-
-        try {
-            const response = await fetch('/api/users/delete', {
-                method: 'POST',
-                body: JSON.stringify({ id: userId }),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error: ${response.status}`)
-            }
-            setUsers(await fetch('api/users').then(res => res.json()));
-
-            setUserData({
-                email: '',
-                password: ''
-            });
-            setSelectedRow(new Set());
-        }
-        catch (error) {
-            console.error('Error during fetching', error);
-        }
-
-    }
-
-    async function handleXlsx(e: React.MouseEvent<HTMLButtonElement>) {
-        e.preventDefault();
-        const usersArray = await getDataFromXlsx();
-        try {
-            const response = await fetch('api/users/createMany', {
-                method: 'POST',
-                body: JSON.stringify(usersArray),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            })
-            if (!response.ok) {
-                throw new Error(`HTTP error: ${response.status}`)
-            }
-            setUsers(await fetch('api/users').then(res => res.json()));
-            setUserData({
-                email: '',
-                password: ''
-            });
-            setSelectedRow(new Set());
-        }
-        catch (error) {
-            console.error('Error during fetching', error);
-        }
-    }
-
-    async function getDataFromXlsx() {
-        return new Promise((resolve, reject) => {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.xlsx';
-
-            input.onchange = (event) => {
-
-                const inputElement = event.target as HTMLInputElement;
-                const file = inputElement.files?.[0];
-                if (file) {
-                    const reader = new FileReader();
-
-                    reader.onload = async (e) => {
-                        const data = e.target?.result;
-                        const workbook = XLSX.read(data, { type: 'array' });
-                        const sheetName = workbook.SheetNames[0];
-                        const worksheet = workbook.Sheets[sheetName];
-
-                        //sheet_to_json converts a worksheet object to an array of JSON objects.
-                        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as string[][];
-                        const headerRow = jsonData[0];
-                        const dataRows = jsonData.slice(1);
-
-                        const dataArray = dataRows.map((row: string[]) => {
-                            const obj: { [key: string]: any } = {};
-                            headerRow.forEach((header: string, index: number) => {
-                                obj[header] = row[index];
-                            });
-                            return obj;
-                        });
-                        console.log(dataArray);
-
-                        resolve(dataArray);
-
-                    };
-
-                    reader.readAsArrayBuffer(file);
-                }
-            };
-
-            input.click();
-        })
-    }
-
-
     return (
         <div className=" flex flex-col lg:flex-row gap-5">
             <div>
@@ -287,38 +117,15 @@ export default function HomePage() {
                         color='primary'
                         value={userData.password}
                     />
-                    <div className="flex gap-5 justify-center">
-                        <button
-                            onClick={addNewUser}
-                            type="submit"
-                            className="  px-3 py-2 text-white bg-primary rounded-lg shadow-sm active:bg-opacity-70 font-medium"
-                        >
-                            <AiOutlinePlus color="white" size={30} />
-                        </button>
-                        <button
-                            onClick={editExistingUserData}
-                            type="submit"
-                            className="  px-3 py-2 text-white bg-primary rounded-lg shadow-sm active:bg-opacity-70 font-medium"
-                        >
-                            <AiOutlineEdit color="white" size={30} />
-                        </button>
-                        <button
-                            onClick={deleteUser}
-                            type="submit"
-                            className="  px-3 py-2 text-white bg-primary rounded-lg shadow-sm active:bg-opacity-70 font-medium"
-                        >
-                            <AiOutlineDelete color="white" size={30} />
-                        </button>
-                        <button
-                            onClick={handleXlsx}
-                            type="submit"
-                            className="  px-3 py-2 text-white bg-primary rounded-lg shadow-sm active:bg-opacity-70 font-medium"
-                        >
-                            <BsFiletypeXlsx color="white" size={30} />
-                        </button>
-
-                    </div>
-
+                    <CustomButtonSection
+                        passedData={userData}
+                        apiRoute="users"
+                        fieldsCorrect={fieldsCorrect}
+                        resetFieldsData={resetFieldsData}
+                        setTableData={setUsers}
+                        selectedRow={selectedRow}
+                        resetRow={resetRow}
+                    />
                 </form>
             </div>
 
