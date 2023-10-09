@@ -23,6 +23,12 @@ const columns: TableColumns[] = [
     },
 ]
 
+const dynamicTableStyles = {
+    table: ["font-sans"],
+    th: ["text-md", "font-semibold"],
+    td: ["text-md"]
+}
+
 export default function HomePage() {
     const [userData, setUserData] = useState<UserData>({
         email: '',
@@ -102,21 +108,23 @@ export default function HomePage() {
     }, []);
 
     return (
-        <div className=" flex flex-col lg:flex-row gap-5">
+        <div className=" flex flex-col gap-5">
             <div>
-                <form className="mx-auto flex flex-col gap-5 p-5" >
-                    <CustomInput
-                        title='Email'
-                        handleChange={(e) => setUserData({ email: e.target.value, password: userData.password })}
-                        color='primary'
-                        value={userData.email}
-                    />
-                    <CustomInput
-                        title='Password'
-                        handleChange={(e) => setUserData({ email: userData.email, password: e.target.value })}
-                        color='primary'
-                        value={userData.password}
-                    />
+                <form className="mx-auto max-w-[700px] flex flex-col gap-5 p-5" >
+                    <div className="flex gap-3 justify-center">
+                        <CustomInput
+                            title='Email'
+                            handleChange={(e) => setUserData({ email: e.target.value, password: userData.password })}
+                            color='primary'
+                            value={userData.email}
+                        />
+                        <CustomInput
+                            title='Password'
+                            handleChange={(e) => setUserData({ email: userData.email, password: e.target.value })}
+                            color='primary'
+                            value={userData.password}
+                        />
+                    </div>
                     <CustomButtonSection
                         passedData={userData}
                         apiRoute="users"
@@ -131,6 +139,7 @@ export default function HomePage() {
 
             <div className="flex flex-auto">
                 <DynamicTable
+                    styles={dynamicTableStyles}
                     tableItems={users}
                     tableColumns={columns}
                     isLoading={isLoading}

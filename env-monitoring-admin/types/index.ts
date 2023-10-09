@@ -30,6 +30,7 @@ export interface TableColumns {
     key: string;
 }
 export interface DynamicTableProps {
+    styles: {}
     tableItems: User[];
     tableColumns: TableColumns[];
     isLoading: boolean;

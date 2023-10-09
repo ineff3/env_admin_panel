@@ -1,18 +1,43 @@
 'use client';
 import { DynamicTableProps } from "@/types";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, getKeyValue } from "@nextui-org/react";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, getKeyValue, Pagination } from "@nextui-org/react";
+import { useState, useMemo } from "react";
 
 
-const DynamicTable = ({ tableItems, tableColumns, isLoading, selectedRow, setSelectedRow }: DynamicTableProps) => {
+const DynamicTable = ({ styles, tableItems, tableColumns, isLoading, selectedRow, setSelectedRow }: DynamicTableProps) => {
+    const [page, setPage] = useState(1);
+    const rowsPerPage = 3;
+
+    const pages = Math.ceil(tableItems.length / rowsPerPage);
+
+    const items = useMemo(() => {
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+
+        return tableItems.slice(start, end);
+    }, [page, tableItems]);
+
     return (
-
         <Table
-            className="font-sans"
-            classNames={isLoading ? { table: "min-h-[300px]" } : {}}
+            classNames={isLoading ? { table: "min-h-[300px]" } : { ...styles }}
             aria-label="Dynamic table"
             selectionMode="single"
             selectedKeys={selectedRow}
             onSelectionChange={setSelectedRow}
+            bottomContent={isLoading ? <></> :
+                <div className="flex w-full justify-center">
+                    <Pagination
+                        isCompact
+                        showControls
+                        showShadow
+                        color="primary"
+                        page={page}
+                        total={pages}
+                        onChange={(page) => setPage(page)}
+                    />
+                </div>
+
+            }
         >
             <TableHeader columns={tableColumns}>
                 {(column) => <TableColumn key={column.key}>{column.name}</TableColumn>}
@@ -21,7 +46,7 @@ const DynamicTable = ({ tableItems, tableColumns, isLoading, selectedRow, setSel
                 isLoading={isLoading}
                 loadingContent={<Spinner label="Loading..." />}
                 emptyContent={isLoading ? '' : "No rows to display."}
-                items={tableItems}
+                items={items}
             >
                 {(item) => (
                     <TableRow key={item.user_id}>

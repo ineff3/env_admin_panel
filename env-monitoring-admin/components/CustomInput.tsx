@@ -14,7 +14,7 @@ const CustomInput = ({ title = "CustomInput", handleChange, color, value }: Cust
                 value={value || ''}
             >
             </input>
-            <div className={`absolute text-gray-400  text-mg block bg-white myInputLabel`}>{title}</div>
+            <div className={`absolute text-gray-400  text-lg block bg-white myInputLabel`}>{title}</div>
         </div>
     )
 }

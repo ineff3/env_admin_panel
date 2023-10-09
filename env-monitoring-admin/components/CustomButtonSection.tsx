@@ -85,21 +85,20 @@ const CustomButtonSection = ({ passedData, apiRoute, fieldsCorrect, resetFieldsD
     async function handleXlsx(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
         const usersArray = await getDataFromXlsx();
-        try {
-            const response = await fetch(`/api/${apiRoute}/createMany`, {
-                method: 'POST',
-                body: JSON.stringify(usersArray),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            })
-            if (!response.ok) {
-                throw new Error(`HTTP error: ${response.status}`)
-            }
+        const response = await fetch(`/api/${apiRoute}/createMany`, {
+            method: 'POST',
+            body: JSON.stringify(usersArray),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        if (!response.ok) {
+            alert('Something went wrong');
+            return;
         }
-        catch (error) {
-            console.error('Error during fetching', error);
-        }
+        setTableData(await fetch(`api/${apiRoute}`).then(res => res.json()))
+        resetFieldsData();
+        resetRow();
     }
 
     async function getDataFromXlsx() {
@@ -177,7 +176,6 @@ const CustomButtonSection = ({ passedData, apiRoute, fieldsCorrect, resetFieldsD
             >
                 <BsFiletypeXlsx color="white" size={30} />
             </button>
-
         </div>
     )
 }
