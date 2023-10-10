@@ -12,3 +12,10 @@ model users {
   email    String? @unique(map: "email") @db.VarChar(50)
   password String  @db.VarChar(20)
 }
+
+model enterprises {
+  id          Int     @id @default(autoincrement())
+  name        String? @unique(map: "name") @db.VarChar(255)
+  description String? @db.Text
+  location    String? @db.VarChar(255)
+}

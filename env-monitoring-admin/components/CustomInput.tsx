@@ -4,8 +4,8 @@ import { CustomInputProps } from '@/types';
 
 const CustomInput = ({ title = "CustomInput", handleChange, color, value }: CustomInputProps) => {
     return (
-        <div id='input-container'
-            className={`flex py-2 pl-5 pr-2 rounded-md border-gray-300 border-2 focus-within:border-${color} hover:focus-within:border-${color} relative group`}>
+        <div
+            className={`flex flex-auto py-2 pl-5 pr-2 rounded-md border-gray-300 border-2 focus-within:border-${color} hover:focus-within:border-${color} relative group`}>
             <input
                 type='text'
                 required

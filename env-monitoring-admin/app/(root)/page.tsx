@@ -1,10 +1,9 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { CustomInput, DynamicTable } from "@/components";
+import { CustomInput, DynamicTable, CustomButtonSection } from "@/components";
 import { TableColumns, User, UserData } from "@/types";
 import { Selection } from "@nextui-org/react";
-import CustomButtonSection from "@/components/CustomButtonSection";
 
 
 //Keys should be as the passed items properties
@@ -137,15 +136,17 @@ export default function HomePage() {
                 </form>
             </div>
 
-            <div className="flex flex-auto">
-                <DynamicTable
-                    styles={dynamicTableStyles}
-                    tableItems={users}
-                    tableColumns={columns}
-                    isLoading={isLoading}
-                    selectedRow={selectedRow}
-                    setSelectedRow={setSelectedRow}
-                />
+            <div className="flex justify-center">
+                <div className=" max-w-[850px] flex flex-auto  ">
+                    <DynamicTable
+                        styles={dynamicTableStyles}
+                        tableItems={users}
+                        tableColumns={columns}
+                        isLoading={isLoading}
+                        selectedRow={selectedRow}
+                        setSelectedRow={setSelectedRow}
+                    />
+                </div>
             </div>
         </div>
 

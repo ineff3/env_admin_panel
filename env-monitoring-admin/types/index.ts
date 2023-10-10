@@ -7,6 +7,12 @@ export interface CustomInputProps {
     color: string;
     value?: string;
 }
+export interface CustomTextAreaProps {
+    title: string;
+    handleChange: ChangeEventHandler<HTMLTextAreaElement>;
+    color: string;
+    value?: string;
+}
 
 export interface HeaderProps {
     nav: boolean;
@@ -24,6 +30,14 @@ export interface UserData {
 export interface User extends UserData {
     user_id: number;
 }
+export interface EnterpriseData {
+    name: string
+    description: string
+    location: string
+}
+export interface Enterpsise extends EnterpriseData {
+    id: number;
+}
 
 export interface TableColumns {
     name: string;
@@ -31,7 +45,7 @@ export interface TableColumns {
 }
 export interface DynamicTableProps {
     styles: {}
-    tableItems: User[];
+    tableItems: any[];
     tableColumns: TableColumns[];
     isLoading: boolean;
     selectedRow: Selection
