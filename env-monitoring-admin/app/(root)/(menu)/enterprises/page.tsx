@@ -6,10 +6,7 @@ import { Selection } from "@nextui-org/react";
 
 //Keys should be as the passed items properties
 const columns: TableColumns[] = [
-    {
-        name: 'ID',
-        key: 'id'
-    },
+
     {
         name: 'NAME',
         key: 'name'
