@@ -48,6 +48,7 @@ export const deleteUser = async (id: string) => {
     })
     revalidatePath('/')
 }
+
 export const createFromXlsx = async (usersArray: User[]) => {
     const users = await prisma.users.createMany({
         data: usersArray

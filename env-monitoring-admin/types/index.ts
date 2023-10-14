@@ -10,8 +10,9 @@ export interface CustomInputProps {
 }
 export interface CustomTextAreaProps {
     title: string;
-    handleChange: ChangeEventHandler<HTMLTextAreaElement>;
     color: string;
+    name: string;
+    handleChange: ChangeEventHandler<HTMLTextAreaElement>;
     value?: string;
 }
 
@@ -36,7 +37,7 @@ export interface EnterpriseData {
     description: string
     location: string
 }
-export interface Enterpsise extends EnterpriseData {
+export interface Enterprise extends EnterpriseData {
     id: number;
 }
 

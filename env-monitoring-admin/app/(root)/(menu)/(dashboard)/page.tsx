@@ -8,7 +8,6 @@ export default async function HomePage() {
 
     return (
         <>
-            <p className=' text-center font-medium'>Handle Users</p>
             <div>
                 <Dashboard users={usersArray as User[]} />
             </div>
