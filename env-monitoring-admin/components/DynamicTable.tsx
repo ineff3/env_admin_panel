@@ -4,7 +4,7 @@ import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinne
 import { useState, useMemo } from "react";
 
 
-const DynamicTable = ({ styles, tableItems, tableColumns, isLoading, selectedRow, setSelectedRow }: DynamicTableProps) => {
+const DynamicTable = ({ tableItems, tableColumns, isLoading, selectedRow, setSelectedRow }: DynamicTableProps) => {
     const [page, setPage] = useState(1);
     const rowsPerPage = 3;
 
@@ -19,7 +19,11 @@ const DynamicTable = ({ styles, tableItems, tableColumns, isLoading, selectedRow
 
     return (
         <Table
-            classNames={isLoading ? { table: "min-h-[300px]" } : { ...styles }}
+            classNames={isLoading ? { table: "min-h-[300px]" } : {
+                table: ["font-sans"],
+                th: ["text-md", "font-semibold"],
+                td: ["text-md"]
+            }}
             aria-label="Dynamic table"
             selectionMode="single"
             selectedKeys={selectedRow}

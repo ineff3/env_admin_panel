@@ -2,12 +2,13 @@
 import React from 'react'
 import { CustomInputProps } from '@/types';
 
-const CustomInput = ({ title = "CustomInput", handleChange, color, value }: CustomInputProps) => {
+const CustomInput = ({ title = "CustomInput", color, name, handleChange, value }: CustomInputProps) => {
     return (
         <div
             className={`flex flex-auto py-2 pl-5 pr-2 rounded-md border-gray-300 border-2 focus-within:border-${color} hover:focus-within:border-${color} relative group`}>
             <input
                 type='text'
+                name={name}
                 required
                 className={`w-full text-lg focus:outline-none text-${color} focus:text-${color} z-50 bg-transparent myInput`}
                 onChange={handleChange}

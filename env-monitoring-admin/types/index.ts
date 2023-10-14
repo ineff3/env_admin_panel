@@ -3,8 +3,9 @@ import { Selection } from "@nextui-org/react";
 
 export interface CustomInputProps {
     title: string;
-    handleChange: ChangeEventHandler<HTMLInputElement>;
     color: string;
+    name: string;
+    handleChange: ChangeEventHandler<HTMLInputElement>;
     value?: string;
 }
 export interface CustomTextAreaProps {
@@ -24,8 +25,8 @@ export interface NavbarProps {
 }
 
 export interface UserData {
-    email?: string;
-    password?: string;
+    email: string;
+    password: string;
 }
 export interface User extends UserData {
     user_id: number;
@@ -44,10 +45,9 @@ export interface TableColumns {
     key: string;
 }
 export interface DynamicTableProps {
-    styles: {}
     tableItems: any[];
     tableColumns: TableColumns[];
-    isLoading: boolean;
+    isLoading?: boolean;
     selectedRow: Selection
     setSelectedRow: (selectedRow: Selection) => void;
 }
