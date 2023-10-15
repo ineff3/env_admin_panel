@@ -3,6 +3,8 @@ import Header from "./Header";
 import CustomInput from "./CustomInput";
 import DynamicTable from "./DynamicTable"
 import CustomTextArea from "./CustomTextArea";
+import SuccessfulToast from "./toasts/SuccessfulToast";
+import ErrorToast from "./toasts/ErrorToast";
 
 export {
     CustomInput,
@@ -10,4 +12,7 @@ export {
     Header,
     Navbar,
     DynamicTable,
+    SuccessfulToast,
+    ErrorToast
+
 }

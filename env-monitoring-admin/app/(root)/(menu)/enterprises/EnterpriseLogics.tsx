@@ -1,12 +1,13 @@
 'use client';
 import { TableColumns, Enterprise, EnterpriseData } from '@/types';
-import { CustomInput, CustomTextArea, DynamicTable } from '@/components';
+import { CustomInput, CustomTextArea, DynamicTable, SuccessfulToast, ErrorToast } from '@/components';
 import { AiOutlinePlus, AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai'
 import { BsFiletypeXlsx } from 'react-icons/bs'
 import { addEnterprise, editEnterprise, deleteEnterprise, createFromXlsx } from '@/actions/enterpriseActions';
 import { useEffect, useState } from 'react';
 import { Selection } from "@nextui-org/react";
 import getDataFromXlsx from '../xlsxHandler';
+import { toast } from 'react-hot-toast';
 
 //Keys should be as the passed items properties
 const columns: TableColumns[] = [
@@ -94,7 +95,13 @@ const EnterpriseLogics = ({ enterprises }: { enterprises: Enterprise[] }) => {
                     <button
                         formAction={async formData => {
                             resetFieldState();
-                            await addEnterprise(formData)
+                            resetRow();
+                            const response = await addEnterprise(formData);
+                            if (response?.error) {
+                                toast.custom((t) => <ErrorToast t={t} message={response.error} />);
+                            } else {
+                                toast.custom((t) => <SuccessfulToast t={t} message='New enterprise added successfully!' />, { duration: 2500 })
+                            }
                         }}
                         className="  px-3 py-2 text-white bg-primary rounded-lg shadow-sm active:bg-opacity-70 font-medium"
                     >
@@ -109,7 +116,12 @@ const EnterpriseLogics = ({ enterprises }: { enterprises: Enterprise[] }) => {
                             const id: string = selectedRow.values().next().value;
                             resetFieldState();
                             resetRow();
-                            await editEnterprise(formData, id);
+                            const response = await editEnterprise(formData, id);
+                            if (response?.error) {
+                                toast.custom((t) => <ErrorToast t={t} message={response.error} />);
+                            } else {
+                                toast.custom((t) => <SuccessfulToast t={t} message='Enterprise edited successfully!' />, { duration: 2500 })
+                            }
                         }}
                         className="  px-3 py-2 text-white bg-primary rounded-lg shadow-sm active:bg-opacity-70 font-medium"
                     >
@@ -124,7 +136,12 @@ const EnterpriseLogics = ({ enterprises }: { enterprises: Enterprise[] }) => {
                             const id: string = selectedRow.values().next().value;
                             resetFieldState();
                             resetRow();
-                            await deleteEnterprise(id);
+                            const response = await deleteEnterprise(id);
+                            if (response?.error) {
+                                toast.custom((t) => <ErrorToast t={t} message={response.error} />);
+                            } else {
+                                toast.custom((t) => <SuccessfulToast t={t} message='Enterprise deleted successfully!' />, { duration: 2500 })
+                            }
                         }}
                         className="  px-3 py-2 text-white bg-primary rounded-lg shadow-sm active:bg-opacity-70 font-medium"
                     >
@@ -148,7 +165,12 @@ const EnterpriseLogics = ({ enterprises }: { enterprises: Enterprise[] }) => {
                 <button
                     onClick={async () => {
                         const enterprisesArray = await getDataFromXlsx();
-                        await createFromXlsx(enterprisesArray as Enterprise[])
+                        const response = await createFromXlsx(enterprisesArray as Enterprise[]);
+                        if (response?.error) {
+                            toast.custom((t) => <ErrorToast t={t} message={response.error} />);
+                        } else {
+                            toast.custom((t) => <SuccessfulToast t={t} message='Enterprises added successfuly!' />, { duration: 2500 })
+                        }
                     }}
                     className=" px-4 py-3 text-white bg-primary rounded-lg shadow-sm active:bg-opacity-70 font-medium"
                 >

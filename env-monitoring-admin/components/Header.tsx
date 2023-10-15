@@ -11,7 +11,7 @@ const Header = ({ nav, handleNav }: HeaderProps) => {
                 {!nav ? <SlMenu size={30} /> : <AiOutlineClose size={30} />}
             </div>
             <div className=' mx-auto text-2xl md:text-3xl font-bold   border-b-2 border-primary py-2 px-5'>
-                Env-Moni
+                /-Env-/
             </div>
         </div>
     )
