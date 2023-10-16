@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { Selection } from "@nextui-org/react";
 import getDataFromXlsx from '../xlsxHandler';
 import { toast } from 'react-hot-toast';
+import { EnterpriseSchema } from '@/schemas';
 
 //Keys should be as the passed items properties
 const columns: TableColumns[] = [
@@ -94,9 +95,26 @@ const EnterpriseLogics = ({ enterprises }: { enterprises: Enterprise[] }) => {
                 <div className='flex gap-5 justify-center'>
                     <button
                         formAction={async formData => {
+                            //client-side validation
+                            const result = EnterpriseSchema.safeParse({
+                                name: formData.get('name'),
+                                location: formData.get('location'),
+                                description: formData.get('description')
+                            });
+                            if (!result.success) {
+                                let errorMessage = '';
+                                result.error.issues.forEach((err) => {
+                                    errorMessage += err.path[0] + ': ' + err.message + '. '
+                                })
+                                toast.custom((t) => <ErrorToast t={t} message={errorMessage} />);
+                                return
+                            }
+
                             resetFieldState();
                             resetRow();
-                            const response = await addEnterprise(formData);
+
+                            //server response + error handling
+                            const response = await addEnterprise(result.data);
                             if (response?.error) {
                                 toast.custom((t) => <ErrorToast t={t} message={response.error} />);
                             } else {
@@ -114,9 +132,28 @@ const EnterpriseLogics = ({ enterprises }: { enterprises: Enterprise[] }) => {
                                 return;
                             }
                             const id: string = selectedRow.values().next().value;
+
+                            //client-side validation
+                            const result = EnterpriseSchema.safeParse({
+                                id: id,
+                                name: formData.get('name'),
+                                location: formData.get('location'),
+                                description: formData.get('description')
+                            });
+                            if (!result.success) {
+                                let errorMessage = '';
+                                result.error.issues.forEach((err) => {
+                                    errorMessage += err.path[0] + ': ' + err.message + '. '
+                                })
+                                toast.custom((t) => <ErrorToast t={t} message={errorMessage} />);
+                                return
+                            }
+
                             resetFieldState();
                             resetRow();
-                            const response = await editEnterprise(formData, id);
+
+                            //server response + error handling
+                            const response = await editEnterprise(result.data);
                             if (response?.error) {
                                 toast.custom((t) => <ErrorToast t={t} message={response.error} />);
                             } else {

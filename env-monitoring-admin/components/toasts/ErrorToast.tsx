@@ -8,7 +8,7 @@ const ErrorToast = ({ t, message }: { t: any, message: string }) => {
         <div className={`flex items-center py-3 px-4 pr-2 gap-4 bg-rose-300 rounded-lg shadow-sm text-black ${t.visible ? ' animate-appearance-in' : ' animate-appearance-out'
             }`}>
             <RxCrossCircled size={25} />
-            <div className=' flex flex-col flex-auto min-w-[180px]  md:min-w-[300px]'>
+            <div className=' flex flex-col flex-auto w-[200px] md:w-[300px]'>
                 <div className=' text-lg font-semibold'>
                     Error
                 </div>

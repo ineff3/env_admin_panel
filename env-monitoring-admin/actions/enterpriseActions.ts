@@ -1,5 +1,6 @@
 "use server"
 import { prisma } from '@/prisma/client_instance'
+import { EnterpriseSchema } from '@/schemas';
 import { Enterprise } from '@/types';
 import { revalidatePath } from 'next/cache';
 
@@ -20,24 +21,32 @@ const getErrorMessage = (error: unknown): string => {
     return message;
 }
 
-export const addEnterprise = async (formData: FormData) => {
-    const name = formData.get('name')
-    const description = formData.get('description')
-    const location = formData.get('location')
+export const addEnterprise = async (newEnterprise: unknown) => {
     try {
+        //server-side validation
+        const result = EnterpriseSchema.safeParse(newEnterprise);
+        if (!result.success) {
+            let errorMessage = '';
+            result.error.issues.forEach((err) => {
+                errorMessage += err.path[0] + ': ' + err.message + '. '
+            })
+            throw new Error(errorMessage);
+        }
+        //checking if element already exists
         const enterpriseExists = await prisma.enterprises.findUnique({
             where: {
-                name: name as string
+                name: result.data.name
             }
         });
         if (enterpriseExists) {
             throw new Error('Enterprise with such name already exists');
         }
+        //adding new element
         await prisma.enterprises.create({
             data: {
-                name: name as string,
-                description: description as string,
-                location: location as string
+                name: result.data.name,
+                description: result.data.description,
+                location: result.data.location
             }
         })
     }
@@ -47,20 +56,26 @@ export const addEnterprise = async (formData: FormData) => {
     revalidatePath('/enterprises')
 }
 
-export const editEnterprise = async (formData: FormData, id: string) => {
-    const name = formData.get('name')
-    const description = formData.get('description')
-    const location = formData.get('location')
-
+export const editEnterprise = async (editedEnterprise: unknown) => {
     try {
+        //server-side validation
+        const result = EnterpriseSchema.safeParse(editedEnterprise);
+        if (!result.success) {
+            let errorMessage = '';
+            result.error.issues.forEach((err) => {
+                errorMessage += err.path[0] + ': ' + err.message + '. '
+            })
+            throw new Error(errorMessage);
+        }
+
         const enterprise = await prisma.enterprises.update({
             where: {
-                id: parseInt(id)
+                id: result.data.id
             },
             data: {
-                name: name as string,
-                description: description as string,
-                location: location as string
+                name: result.data.name,
+                description: result.data.description,
+                location: result.data.location
             }
         })
     }
