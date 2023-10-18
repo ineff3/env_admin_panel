@@ -53,6 +53,13 @@ const EnterpriseLogics = ({ enterprises }: { enterprises: Enterprise[] }) => {
         }
     }, [selectedRow]);
 
+    const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setEnterpriseData({
+            ...enterpriseData,
+            [e.target.name]: e.target.value
+        })
+    }
+
     function resetFieldState() {
         setEnterpriseData({
             name: '',
@@ -71,14 +78,14 @@ const EnterpriseLogics = ({ enterprises }: { enterprises: Enterprise[] }) => {
                     <CustomInput
                         title='Name'
                         name='name'
-                        handleChange={(e) => setEnterpriseData({ name: e.target.value, location: enterpriseData.location, description: enterpriseData.description })}
+                        handleChange={handleFormChange}
                         color='primary'
                         value={enterpriseData.name}
                     />
                     <CustomInput
                         title='Location'
                         name='location'
-                        handleChange={(e) => setEnterpriseData({ name: enterpriseData.name, location: e.target.value, description: enterpriseData.description })}
+                        handleChange={handleFormChange}
                         color='primary'
                         value={enterpriseData.location}
                     />
@@ -87,7 +94,7 @@ const EnterpriseLogics = ({ enterprises }: { enterprises: Enterprise[] }) => {
                     <CustomTextArea
                         title='Description'
                         name='description'
-                        handleChange={(e) => setEnterpriseData({ name: enterpriseData.name, location: enterpriseData.location, description: e.target.value })}
+                        handleChange={handleFormChange}
                         color='primary'
                         value={enterpriseData.description}
                     />
