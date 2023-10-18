@@ -6,7 +6,7 @@ import { BsFiletypeXlsx } from 'react-icons/bs'
 import { addUser, editUser, deleteUser, createFromXlsx } from '@/actions/userActions';
 import { useEffect, useState } from 'react';
 import { Selection } from "@nextui-org/react";
-import getDataFromXlsx from '../xlsxHandler';
+import getDataFromXlsx from '@/actions/xlsx/xlsxParser';
 
 
 //Keys should be as the passed items properties

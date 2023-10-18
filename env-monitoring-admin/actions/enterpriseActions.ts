@@ -1,6 +1,6 @@
 "use server"
 import { prisma } from '@/prisma/client_instance'
-import { EnterpriseSchema } from '@/schemas';
+import { EnterpriseArraySchema, EnterpriseSchema } from '@/schemas';
 import { Enterprise } from '@/types';
 import { revalidatePath } from 'next/cache';
 
@@ -99,10 +99,19 @@ export const deleteEnterprise = async (id: string) => {
     revalidatePath('/enterprises')
 }
 
-export const createFromXlsx = async (enterprisesArray: Enterprise[]) => {
+export const createFromXlsx = async (enterpriseArray: unknown) => {
     try {
+        //server-side validation
+        const result = EnterpriseArraySchema.safeParse(enterpriseArray)
+        if (!result.success) {
+            let errorMessage = '';
+            result.error.issues.forEach((err) => {
+                errorMessage += err.path[0] + ': ' + err.message + '. '
+            })
+            throw new Error(errorMessage);
+        }
         const enterprises = await prisma.enterprises.createMany({
-            data: enterprisesArray
+            data: result.data
         })
     }
     catch (error) {

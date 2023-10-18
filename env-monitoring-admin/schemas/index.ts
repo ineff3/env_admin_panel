@@ -11,3 +11,7 @@ export const EnterpriseSchema = z.object({
     description: z.string().trim()
         .min(1, { message: "Enterprise location should be at least 1 character long" })
 });
+
+export const EnterpriseArraySchema = z.array(EnterpriseSchema).nonempty({
+    message: "Can't be empty!",
+});

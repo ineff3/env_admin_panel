@@ -6,9 +6,9 @@ import { BsFiletypeXlsx } from 'react-icons/bs'
 import { addEnterprise, editEnterprise, deleteEnterprise, createFromXlsx } from '@/actions/enterpriseActions';
 import { useEffect, useState } from 'react';
 import { Selection } from "@nextui-org/react";
-import getDataFromXlsx from '../xlsxHandler';
+import getDataFromXlsx from '@/actions/xlsx/xlsxParser';
 import { toast } from 'react-hot-toast';
-import { EnterpriseSchema } from '@/schemas';
+import { EnterpriseSchema, EnterpriseArraySchema } from '@/schemas';
 
 //Keys should be as the passed items properties
 const columns: TableColumns[] = [
@@ -208,8 +208,18 @@ const EnterpriseLogics = ({ enterprises }: { enterprises: Enterprise[] }) => {
             <div className='flex justify-center '>
                 <button
                     onClick={async () => {
-                        const enterprisesArray = await getDataFromXlsx();
-                        const response = await createFromXlsx(enterprisesArray as Enterprise[]);
+                        const enterpriseArray = await getDataFromXlsx();
+                        //client-side validation
+                        const result = EnterpriseArraySchema.safeParse(enterpriseArray)
+                        if (!result.success) {
+                            let errorMessage = '';
+                            result.error.issues.forEach((err) => {
+                                errorMessage += err.path[0] + ': ' + err.message + '. '
+                            })
+                            toast.custom((t) => <ErrorToast t={t} message={errorMessage} />);
+                            return
+                        }
+                        const response = await createFromXlsx(result.data);
                         if (response?.error) {
                             toast.custom((t) => <ErrorToast t={t} message={response.error} />);
                         } else {
