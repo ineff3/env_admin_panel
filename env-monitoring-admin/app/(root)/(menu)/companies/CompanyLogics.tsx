@@ -146,9 +146,9 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
 
 
     return (
-        <div className=" flex flex-col gap-5">
+        <div className=" flex flex-col  gap-5">
             <div className='flex justify-center'>
-                <form className="max-w-[750px] flex flex-auto  " >
+                <form className="max-w-[850px] flex flex-auto  " >
                     <div className='flex flex-col flex-auto gap-5 p-5'>
                         <CustomInput
                             title='Name'
@@ -189,7 +189,7 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
             </div>
 
             <div className="flex justify-center">
-                <div className=" max-w-[850px] flex flex-auto  ">
+                <div className=" max-w-[950px] flex flex-auto  ">
                     <DynamicTable
                         tableItems={companies}
                         tableColumns={columns}
