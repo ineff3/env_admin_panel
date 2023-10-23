@@ -37,6 +37,12 @@ const Navbar = ({ handleNav }: NavbarProps) => {
                 </Link>
             </nav>
             <nav >
+                <Link className={pathname === '/companies' ? activeLinkStyles : inactiveLinkStyles + inactiveHoverStyles} href={'/companies'}>
+                    <PiFactory size={25} />
+                    Companies
+                </Link>
+            </nav>
+            <nav >
                 <Link className={pathname === '/news' ? activeLinkStyles : inactiveLinkStyles + inactiveHoverStyles} href={'/news'}>
                     <PiNewspaperClipping size={25} />
                     News

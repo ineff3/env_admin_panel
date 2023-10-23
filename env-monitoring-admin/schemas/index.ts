@@ -15,3 +15,13 @@ export const EnterpriseSchema = z.object({
 export const EnterpriseArraySchema = z.array(EnterpriseSchema).nonempty({
     message: "Can't be empty!",
 });
+
+//--------------------------------------------------------------------
+export const CompanySchema = z.object({
+    id: z.number().positive().int().optional(),
+    name: z.string().trim()
+        .min(1, { message: "Enterprise name should be at least 1 character long" })
+        .max(25, { message: "Enterprise name should be at most 25 character long" }),
+    description: z.string().trim()
+        .min(1, { message: "Enterprise location should be at least 1 character long" })
+});

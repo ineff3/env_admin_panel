@@ -3,15 +3,15 @@ import { Enterprise } from '@/types';
 import EnterpriseLogics from './EnterpriseLogics';
 
 const Enterprises = async () => {
-    const enterpriseArray = await prisma.enterprises.findMany();
+    // const enterpriseArray = await prisma.enterprises.findMany();
 
     return (
         <>
-            <div>
+            {/* <div>
                 <EnterpriseLogics
                     enterprises={enterpriseArray as Enterprise[]}
                 />
-            </div>
+            </div> */}
         </>
     );
 }

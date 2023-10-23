@@ -62,3 +62,17 @@ export interface CustomButtonSelectionProps {
     resetRow: () => void;
     setTableData: (tableData: any[]) => void;
 }
+// -------------------------------------------------------------------
+export interface CustomServerResponse {
+    statusCode: number;
+    isSuccess: boolean;
+    errorMessages: string[];
+    result: any[]; // Здесь можно использовать тип, который точно соответствует вашим данным
+}
+export interface CompanyDataType {
+    name: string;
+    description: string;
+}
+export interface CompanyType extends CompanyDataType {
+    id: number;
+}
