@@ -15,6 +15,13 @@ export interface CustomTextAreaProps {
     handleChange: ChangeEventHandler<HTMLTextAreaElement>;
     value?: string;
 }
+export interface CustomDropdownProps {
+    color: string,
+    name: string,
+    handleChange: ChangeEventHandler<HTMLSelectElement>
+    value?: string,
+    options: CompanyNamesArrayType
+}
 
 export interface HeaderProps {
     nav: boolean;
@@ -67,7 +74,7 @@ export interface CustomServerResponse {
     statusCode: number;
     isSuccess: boolean;
     errorMessages: string[];
-    result: any[]; // Здесь можно использовать тип, который точно соответствует вашим данным
+    result: any[];
 }
 export interface CompanyDataType {
     name: string;
@@ -75,4 +82,14 @@ export interface CompanyDataType {
 }
 export interface CompanyType extends CompanyDataType {
     id: number;
+}
+export type CompanyNamesArrayType = Array<{ name: string }>
+
+export interface PassportDataType {
+    company_id: string,
+    year: string
+}
+
+export interface PassportType extends PassportDataType {
+    id: number
 }

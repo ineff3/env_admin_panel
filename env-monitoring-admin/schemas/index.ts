@@ -21,7 +21,7 @@ export const CompanySchema = z.object({
     id: z.number().positive().int().optional(),
     name: z.string().trim()
         .min(1, { message: "Enterprise name should be at least 1 character long" })
-        .max(25, { message: "Enterprise name should be at most 25 character long" }),
+        .max(45, { message: "Enterprise name should be at most 45 character long" }),
     description: z.string().trim()
         .min(1, { message: "Enterprise location should be at least 1 character long" })
 });
@@ -29,3 +29,9 @@ export const CompanySchema = z.object({
 export const CompanyArraySchema = z.array(CompanySchema).nonempty({
     message: "Can't be empty!",
 });
+
+export const PassportSchema = z.object({
+    id: z.number().positive().int().optional(),
+    company_id: z.number().positive().int(),
+    year: z.number().positive().int()
+})

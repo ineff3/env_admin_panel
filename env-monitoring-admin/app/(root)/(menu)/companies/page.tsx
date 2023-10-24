@@ -1,7 +1,6 @@
-import React from 'react'
 import { getCompanies } from '@/actions/companiesActions'
 import CompanyLogics from './CompanyLogics';
-import { CompanyDataType, CompanyType } from '@/types';
+import { CompanyType } from '@/types';
 
 const Comapnies = async () => {
     const companiesArray = await getCompanies();

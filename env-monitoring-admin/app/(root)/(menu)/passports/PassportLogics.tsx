@@ -1,31 +1,31 @@
 'use client';
-import { CompanyDataType, CompanyType, TableColumns } from '@/types'
-import { CustomInput, CustomTextArea, DynamicTable, SuccessfulToast, ErrorToast } from '@/components';
+import { CompanyNamesArrayType, CompanyType, PassportDataType, PassportType } from "@/types"
+import { TableColumns } from '@/types'
+import { CustomInput, CustomDropdown, DynamicTable, SuccessfulToast, ErrorToast } from '@/components';
 import { AiOutlinePlus, AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai'
-import { BsFiletypeXlsx } from 'react-icons/bs'
 import { useEffect, useState } from 'react';
 import { Selection } from "@nextui-org/react";
-import getDataFromXlsx from '@/actions/xlsx/xlsxParser';
 import { toast } from 'react-hot-toast';
-import { CompanyArraySchema, CompanySchema } from '@/schemas';
-import { addCompany, deleteCompany, editCompany } from '@/actions/companiesActions';
+import { PassportSchema } from '@/schemas';
+import { addPassport, deletePassport, editPassport } from "@/actions/passportsActions";
 
-//Keys should be as the passed items properties
 const columns: TableColumns[] = [
     {
-        name: 'NAME',
-        key: 'name'
+        name: 'COMPANY NAME',
+        key: 'company_name'
     },
     {
-        name: 'DESCRIPTION',
-        key: 'description'
+        name: 'YEAR',
+        key: 'year'
     },
 ]
 
-const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
-    const [companyData, setCompanyData] = useState<CompanyDataType>({
-        name: '',
-        description: '',
+const PassportLogics = ({ companyNamesArray, passports, companies, passportsToShow }: {
+    companyNamesArray: CompanyNamesArrayType, passports: PassportType[], companies: CompanyType[], passportsToShow: any
+}) => {
+    const [passportData, setPassportData] = useState<PassportDataType>({
+        company_id: '',
+        year: ''
     })
     const [selectedRow, setSelectedRow] = useState<Selection>(new Set());
 
@@ -34,12 +34,13 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
         if (typeof selectedRow !== 'string' && selectedRow.size > 0) {
             const id: string = selectedRow.values().next().value;
 
-            const selectedCompany = companies.find(company => company.id === +id);
+            const selectedPassport = passports.find(passport => passport.id === +id);
 
-            if (selectedCompany !== undefined) {
-                setCompanyData({
-                    name: selectedCompany.name,
-                    description: selectedCompany.description
+            if (selectedPassport !== undefined) {
+                const companyName = getCompanyNameById(Number(selectedPassport.company_id))
+                setPassportData({
+                    company_id: companyName as string,
+                    year: selectedPassport.year
                 })
             }
         } else {
@@ -47,28 +48,45 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
         }
     }, [selectedRow]);
 
-    const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setCompanyData({
-            ...companyData,
+    const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        setPassportData({
+            ...passportData,
             [e.target.name]: e.target.value
         })
     }
 
     function resetFieldState() {
-        setCompanyData({
-            name: '',
-            description: ''
+        setPassportData({
+            company_id: '',
+            year: ''
         });
     }
     function resetRow() {
         setSelectedRow(new Set());
     }
+    function getCompanyIdByName(companyName: string) {
+        return companies.find(company => company.name === companyName)?.id;
+    }
+    function getCompanyNameById(companyId: number) {
+        return companies.find(company => company.id === companyId)?.name;
+    }
 
-    const clientAddCompany = async (formData: FormData) => {
+    const clientAddPassport = async (formData: FormData) => {
+        const company_id = getCompanyIdByName(String(formData.get('company_id')));
+        const year = Number(formData.get('year'));
+
+        if (company_id === undefined || isNaN(company_id)) {
+            toast.custom((t) => <ErrorToast t={t} message={"copany_id is not a number"} />);
+            return;
+        }
+        if (isNaN(year)) {
+            toast.custom((t) => <ErrorToast t={t} message={"year is not a number"} />);
+            return;
+        }
         // client-side validation
-        const result = CompanySchema.safeParse({
-            name: formData.get('name'),
-            description: formData.get('description')
+        const result = PassportSchema.safeParse({
+            company_id: company_id,
+            year: year
         });
         if (!result.success) {
             let errorMessage = '';
@@ -83,27 +101,38 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
         resetRow();
 
         //server response + error handling
-        const response = await addCompany(result.data);
+        const response = await addPassport(result.data);
         if (response?.error) {
             toast.custom((t) => <ErrorToast t={t} message={response.error} />);
         } else {
-            toast.custom((t) => <SuccessfulToast t={t} message='New company added successfully!' />, { duration: 2500 })
+            toast.custom((t) => <SuccessfulToast t={t} message='New passport added successfully!' />, { duration: 2500 })
         }
-
     }
 
-    const clientEditCompany = async (formData: FormData) => {
+    const clientEditPassport = async (formData: FormData) => {
         if (typeof selectedRow === 'string' || selectedRow.size === 0) {
             alert("Row is not selected")
             return;
         }
         const id: string = selectedRow.values().next().value;
+
+        const company_id = getCompanyIdByName(String(formData.get('company_id')));
+        const year = Number(formData.get('year'));
+
+        if (company_id === undefined || isNaN(company_id)) {
+            toast.custom((t) => <ErrorToast t={t} message={"copany_id is not a number"} />);
+            return;
+        }
+        if (isNaN(year)) {
+            toast.custom((t) => <ErrorToast t={t} message={"year is not a number"} />);
+            return;
+        }
 
         //client-side validation
-        const result = CompanySchema.safeParse({
+        const result = PassportSchema.safeParse({
             id: id,
-            name: formData.get('name'),
-            description: formData.get('description')
+            company_id: company_id,
+            year: year
         });
         if (!result.success) {
             let errorMessage = '';
@@ -118,15 +147,15 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
         resetRow();
 
         //server response + error handling
-        const response = await editCompany(result.data);
+        const response = await editPassport(result.data);
         if (response?.error) {
             toast.custom((t) => <ErrorToast t={t} message={response.error} />);
         } else {
-            toast.custom((t) => <SuccessfulToast t={t} message='Company edited successfully!' />, { duration: 2500 })
+            toast.custom((t) => <SuccessfulToast t={t} message='Passport edited successfully!' />, { duration: 2500 })
         }
     }
 
-    const clientDeleteCompany = async (formData: FormData) => {
+    const clientDeletePassport = async (formData: FormData) => {
         if (typeof selectedRow === 'string' || selectedRow.size === 0) {
             alert("Row is not selected")
             return;
@@ -136,7 +165,7 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
         resetFieldState();
         resetRow();
 
-        const response = await deleteCompany(id);
+        const response = await deletePassport(id);
         if (response?.error) {
             toast.custom((t) => <ErrorToast t={t} message={response.error} />);
         } else {
@@ -144,61 +173,40 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
         }
     }
 
-    const clientAddManyCompanies = async () => {
-        const enterpriseArray = await getDataFromXlsx();
-        //client-side validation
-        const result = CompanyArraySchema.safeParse(enterpriseArray)
-        if (!result.success) {
-            let errorMessage = '';
-            result.error.issues.forEach((err) => {
-                errorMessage += err.path[0] + ': ' + err.message + '. '
-            })
-            toast.custom((t) => <ErrorToast t={t} message={errorMessage} />);
-            return
-        }
-        // const response = await createFromXlsx(result.data);
-        // if (response?.error) {
-        //     toast.custom((t) => <ErrorToast t={t} message={response.error} />);
-        // } else {
-        //     toast.custom((t) => <SuccessfulToast t={t} message='Enterprises added successfuly!' />, { duration: 2500 })
-        // }
-    }
-
-
     return (
         <div className=" flex flex-col  gap-5">
             <div className='flex justify-center'>
                 <form className="max-w-[850px] flex flex-auto  " >
                     <div className='flex flex-col flex-auto gap-5 p-5'>
                         <CustomInput
-                            title='Name'
-                            name='name'
+                            title='Year'
+                            name='year'
                             handleChange={handleFormChange}
                             color='primary'
-                            value={companyData.name}
+                            value={passportData.year}
                         />
-                        <CustomTextArea
-                            title='Description'
-                            name='description'
+                        <CustomDropdown
+                            name="company_id"
+                            options={companyNamesArray}
+                            value={passportData.company_id}
                             handleChange={handleFormChange}
-                            color='primary'
-                            value={companyData.description}
+                            color="primary"
                         />
                         <div className='flex gap-5 justify-center'>
                             <button
-                                formAction={clientAddCompany}
+                                formAction={clientAddPassport}
                                 className="  px-3 py-2 text-white bg-primary rounded-lg shadow-sm active:bg-opacity-70 font-medium"
                             >
                                 <AiOutlinePlus color="white" size={30} />
                             </button>
                             <button
-                                formAction={clientEditCompany}
+                                formAction={clientEditPassport}
                                 className="  px-3 py-2 text-white bg-primary rounded-lg shadow-sm active:bg-opacity-70 font-medium"
                             >
                                 <AiOutlineEdit color="white" size={30} />
                             </button>
                             <button
-                                formAction={clientDeleteCompany}
+                                formAction={clientDeletePassport}
                                 className="  px-3 py-2 text-white bg-primary rounded-lg shadow-sm active:bg-opacity-70 font-medium"
                             >
                                 <AiOutlineDelete color="white" size={30} />
@@ -211,27 +219,16 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
             <div className="flex justify-center">
                 <div className=" max-w-[950px] flex flex-auto  ">
                     <DynamicTable
-                        tableItems={companies}
+                        tableItems={passportsToShow}
                         tableColumns={columns}
                         selectedRow={selectedRow}
                         setSelectedRow={setSelectedRow}
                     />
                 </div>
             </div>
-            <p className=' text-center text-xl'>OR</p>
-            <div className='flex justify-center '>
-                <button
-                    onClick={clientAddManyCompanies}
-                    className=" px-4 py-3 text-white bg-primary rounded-lg shadow-sm active:bg-opacity-70 font-medium"
-                >
-                    <div className='flex gap-3'>
-                        <BsFiletypeXlsx color="white" size={30} />
-                        <p className=' font-normal'>Insert data from a file</p>
-                    </div>
-                </button>
-            </div>
         </div>
     )
 }
 
-export default CompanyLogics
+export default PassportLogics
+

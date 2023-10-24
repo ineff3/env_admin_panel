@@ -28,7 +28,7 @@ const DynamicTable = ({ tableItems, tableColumns, isLoading, selectedRow, setSel
             selectionMode="single"
             selectedKeys={selectedRow}
             onSelectionChange={setSelectedRow}
-            bottomContent={isLoading ? <></> :
+            bottomContent={isLoading || tableItems.length === 0 ? <></> :
                 <div className="flex w-full justify-center">
                     <Pagination
                         isCompact

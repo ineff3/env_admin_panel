@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 import https from 'https';
 import { CustomServerResponse } from '@/types';
 import { revalidatePath } from 'next/cache';
-import { CompanySchema } from '@/schemas';
+import { PassportSchema } from '@/schemas';
 
 const agent = new https.Agent({
     rejectUnauthorized: false
@@ -25,7 +25,6 @@ const getErrorMessage = (error: unknown): string => {
     }
     return message;
 }
-
 const formatServerErrors = (errorMessages: string[]) => {
     if (!Array.isArray(errorMessages) || errorMessages.length === 0) {
         return;
@@ -34,14 +33,14 @@ const formatServerErrors = (errorMessages: string[]) => {
     return errorMessages.join('. ');
 }
 
-export const getCompanies = async () => {
+export const getPassports = async () => {
     const fetchOptions = {
         method: 'GET',
         agent,
     };
 
     try {
-        const response = await fetch('https://localhost:7001/api/CompanyData', fetchOptions);
+        const response = await fetch('https://localhost:7001/api/PassportData', fetchOptions);
 
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -54,12 +53,12 @@ export const getCompanies = async () => {
         console.error('Error:', error);
         return [];
     }
-};
+}
 
-export const addCompany = async (newCompany: unknown) => {
+export const addPassport = async (newPassport: unknown) => {
     try {
         //server-side validation
-        const result = CompanySchema.safeParse(newCompany);
+        const result = PassportSchema.safeParse(newPassport);
         if (!result.success) {
             let errorMessage = '';
             result.error.issues.forEach((err) => {
@@ -67,16 +66,7 @@ export const addCompany = async (newCompany: unknown) => {
             })
             throw new Error(errorMessage);
         }
-        //checking if element already exists
-        // const enterpriseExists = await prisma.enterprises.findUnique({
-        //     where: {
-        //         name: result.data.name
-        //     }
-        // });
-        // if (enterpriseExists) {
-        //     throw new Error('Enterprise with such name already exists');
-        // }
-        //adding new element
+
         const fetchOptions = {
             method: 'POST',
             headers: {
@@ -84,12 +74,12 @@ export const addCompany = async (newCompany: unknown) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                name: result.data.name,
-                description: result.data.description,
+                company_id: result.data.company_id,
+                year: result.data.year,
             }),
             agent
         };
-        const response = await fetch('https://localhost:7001/api/CompanyData', fetchOptions)
+        const response = await fetch('https://localhost:7001/api/PassportData', fetchOptions)
 
         if (!response.ok) {
             const responseBody = await response.json() as CustomServerResponse;
@@ -99,13 +89,13 @@ export const addCompany = async (newCompany: unknown) => {
     catch (error) {
         return { error: getErrorMessage(error) }
     }
-    revalidatePath('/companies')
+    revalidatePath('/passports')
 }
 
-export const editCompany = async (editedCompany: unknown) => {
+export const editPassport = async (editedPassport: unknown) => {
     try {
         //server-side validation
-        const result = CompanySchema.safeParse(editedCompany);
+        const result = PassportSchema.safeParse(editedPassport);
         if (!result.success) {
             let errorMessage = '';
             result.error.issues.forEach((err) => {
@@ -120,14 +110,14 @@ export const editCompany = async (editedCompany: unknown) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                id: result.data.id,
-                name: result.data.name,
-                description: result.data.description,
+                company_id: result.data.company_id,
+                year: result.data.year,
+                id: result.data.id
             }),
             agent
         };
 
-        const response = await fetch('https://localhost:7001/api/CompanyData', fetchOptions)
+        const response = await fetch('https://localhost:7001/api/PassportData', fetchOptions)
 
         if (!response.ok) {
             const responseBody = await response.json() as CustomServerResponse;
@@ -137,17 +127,17 @@ export const editCompany = async (editedCompany: unknown) => {
     catch (error) {
         return { error: getErrorMessage(error) }
     }
-    revalidatePath('/enterprises')
+    revalidatePath('/passports')
 
 }
 
-export const deleteCompany = async (id: string) => {
+export const deletePassport = async (id: string) => {
     try {
         const fetchOptions = {
             method: 'DELETE',
             agent
         }
-        const response = await fetch(`https://localhost:7001/api/CompanyData/id:int?id=${parseInt(id)}`, fetchOptions);
+        const response = await fetch(`https://localhost:7001/api/PassportData/id:int?id=${parseInt(id)}`, fetchOptions);
         if (!response.ok) {
             const responseBody = await response.json() as CustomServerResponse;
             throw new Error(formatServerErrors(responseBody.errorMessages));
@@ -156,5 +146,5 @@ export const deleteCompany = async (id: string) => {
     catch (error) {
         return { error: getErrorMessage(error) }
     }
-    revalidatePath('/companies')
+    revalidatePath('/passports')
 }

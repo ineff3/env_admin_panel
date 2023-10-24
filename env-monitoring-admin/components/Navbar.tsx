@@ -43,9 +43,9 @@ const Navbar = ({ handleNav }: NavbarProps) => {
                 </Link>
             </nav>
             <nav >
-                <Link className={pathname === '/news' ? activeLinkStyles : inactiveLinkStyles + inactiveHoverStyles} href={'/news'}>
+                <Link className={pathname === '/passports' ? activeLinkStyles : inactiveLinkStyles + inactiveHoverStyles} href={'/passports'}>
                     <PiNewspaperClipping size={25} />
-                    News
+                    Passports
                 </Link>
             </nav>
             <nav >
