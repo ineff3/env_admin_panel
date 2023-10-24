@@ -31,12 +31,6 @@ const Navbar = ({ handleNav }: NavbarProps) => {
                 </Link>
             </nav>
             <nav >
-                <Link className={pathname === '/enterprises' ? activeLinkStyles : inactiveLinkStyles + inactiveHoverStyles} href={'/enterprises'}>
-                    <PiFactory size={25} />
-                    Enterprises
-                </Link>
-            </nav>
-            <nav >
                 <Link className={pathname === '/companies' ? activeLinkStyles : inactiveLinkStyles + inactiveHoverStyles} href={'/companies'}>
                     <PiFactory size={25} />
                     Companies
@@ -49,9 +43,9 @@ const Navbar = ({ handleNav }: NavbarProps) => {
                 </Link>
             </nav>
             <nav >
-                <Link className={pathname === '/pollution' ? activeLinkStyles : inactiveLinkStyles + inactiveHoverStyles} href={'/pollution'}>
+                <Link className={pathname === '/pollutions' ? activeLinkStyles : inactiveLinkStyles + inactiveHoverStyles} href={'/pollutions'}>
                     <PiTrash size={25} />
-                    Pollution
+                    Pollutions
                 </Link>
             </nav>
             <nav >
