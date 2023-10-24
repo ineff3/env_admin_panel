@@ -219,6 +219,7 @@ const PassportLogics = ({ companyNamesArray, passports, companies, passportsToSh
             <div className="flex justify-center">
                 <div className=" max-w-[950px] flex flex-auto  ">
                     <DynamicTable
+                        rowsLength={5}
                         tableItems={passportsToShow}
                         tableColumns={columns}
                         selectedRow={selectedRow}

@@ -4,9 +4,9 @@ import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinne
 import { useState, useMemo } from "react";
 
 
-const DynamicTable = ({ tableItems, tableColumns, isLoading, selectedRow, setSelectedRow }: DynamicTableProps) => {
+const DynamicTable = ({ rowsLength, tableItems, tableColumns, isLoading, selectedRow, setSelectedRow }: DynamicTableProps) => {
     const [page, setPage] = useState(1);
-    const rowsPerPage = 3;
+    const rowsPerPage = rowsLength;
 
     const pages = Math.ceil(tableItems.length / rowsPerPage);
 

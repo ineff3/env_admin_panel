@@ -67,16 +67,6 @@ export const addCompany = async (newCompany: unknown) => {
             })
             throw new Error(errorMessage);
         }
-        //checking if element already exists
-        // const enterpriseExists = await prisma.enterprises.findUnique({
-        //     where: {
-        //         name: result.data.name
-        //     }
-        // });
-        // if (enterpriseExists) {
-        //     throw new Error('Enterprise with such name already exists');
-        // }
-        //adding new element
         const fetchOptions = {
             method: 'POST',
             headers: {

@@ -144,25 +144,6 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
         }
     }
 
-    const clientAddManyCompanies = async () => {
-        const enterpriseArray = await getDataFromXlsx();
-        //client-side validation
-        const result = CompanyArraySchema.safeParse(enterpriseArray)
-        if (!result.success) {
-            let errorMessage = '';
-            result.error.issues.forEach((err) => {
-                errorMessage += err.path[0] + ': ' + err.message + '. '
-            })
-            toast.custom((t) => <ErrorToast t={t} message={errorMessage} />);
-            return
-        }
-        // const response = await createFromXlsx(result.data);
-        // if (response?.error) {
-        //     toast.custom((t) => <ErrorToast t={t} message={response.error} />);
-        // } else {
-        //     toast.custom((t) => <SuccessfulToast t={t} message='Enterprises added successfuly!' />, { duration: 2500 })
-        // }
-    }
 
 
     return (
@@ -211,24 +192,13 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
             <div className="flex justify-center">
                 <div className=" max-w-[950px] flex flex-auto  ">
                     <DynamicTable
+                        rowsLength={5}
                         tableItems={companies}
                         tableColumns={columns}
                         selectedRow={selectedRow}
                         setSelectedRow={setSelectedRow}
                     />
                 </div>
-            </div>
-            <p className=' text-center text-xl'>OR</p>
-            <div className='flex justify-center '>
-                <button
-                    onClick={clientAddManyCompanies}
-                    className=" px-4 py-3 text-white bg-primary rounded-lg shadow-sm active:bg-opacity-70 font-medium"
-                >
-                    <div className='flex gap-3'>
-                        <BsFiletypeXlsx color="white" size={30} />
-                        <p className=' font-normal'>Insert data from a file</p>
-                    </div>
-                </button>
             </div>
         </div>
     )

@@ -32,27 +32,12 @@ export interface NavbarProps {
     handleNav: () => void
 }
 
-export interface UserData {
-    email: string;
-    password: string;
-}
-export interface User extends UserData {
-    user_id: number;
-}
-export interface EnterpriseData {
-    name: string
-    description: string
-    location: string
-}
-export interface Enterprise extends EnterpriseData {
-    id: number;
-}
-
 export interface TableColumns {
     name: string;
     key: string;
 }
 export interface DynamicTableProps {
+    rowsLength: number
     tableItems: any[];
     tableColumns: TableColumns[];
     isLoading?: boolean;

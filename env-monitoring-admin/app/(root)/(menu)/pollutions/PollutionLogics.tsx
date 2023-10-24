@@ -254,6 +254,7 @@ const PollutionLogics = ({ pollutions }: { pollutions: PollutionType[] }) => {
             <div className="flex justify-center">
                 <div className=" max-w-[950px] flex flex-auto  ">
                     <DynamicTable
+                        rowsLength={8}
                         tableItems={pollutions}
                         tableColumns={columns}
                         selectedRow={selectedRow}

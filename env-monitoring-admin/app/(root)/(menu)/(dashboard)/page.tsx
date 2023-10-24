@@ -5,7 +5,7 @@ export default async function HomePage() {
 
     return (
         <>
-            Dashboard
+            Welcome to the Los Pollos
         </>
     );
 }
