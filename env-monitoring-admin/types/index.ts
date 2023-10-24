@@ -64,6 +64,7 @@ export interface CustomServerResponse {
 export interface CompanyDataType {
     name: string;
     description: string;
+    location: string
 }
 export interface CompanyType extends CompanyDataType {
     id: number;

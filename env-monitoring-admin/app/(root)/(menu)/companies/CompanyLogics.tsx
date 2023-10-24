@@ -20,12 +20,17 @@ const columns: TableColumns[] = [
         name: 'DESCRIPTION',
         key: 'description'
     },
+    {
+        name: 'LOCATION',
+        key: 'location'
+    },
 ]
 
 const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
     const [companyData, setCompanyData] = useState<CompanyDataType>({
         name: '',
         description: '',
+        location: ''
     })
     const [selectedRow, setSelectedRow] = useState<Selection>(new Set());
 
@@ -39,7 +44,8 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
             if (selectedCompany !== undefined) {
                 setCompanyData({
                     name: selectedCompany.name,
-                    description: selectedCompany.description
+                    description: selectedCompany.description,
+                    location: selectedCompany.location
                 })
             }
         } else {
@@ -57,7 +63,9 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
     function resetFieldState() {
         setCompanyData({
             name: '',
-            description: ''
+            description: '',
+            location: ''
+
         });
     }
     function resetRow() {
@@ -68,7 +76,8 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
         // client-side validation
         const result = CompanySchema.safeParse({
             name: formData.get('name'),
-            description: formData.get('description')
+            description: formData.get('description'),
+            location: formData.get('location')
         });
         if (!result.success) {
             let errorMessage = '';
@@ -103,7 +112,8 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
         const result = CompanySchema.safeParse({
             id: id,
             name: formData.get('name'),
-            description: formData.get('description')
+            description: formData.get('description'),
+            location: formData.get('location')
         });
         if (!result.success) {
             let errorMessage = '';
@@ -151,13 +161,22 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
             <div className='flex justify-center'>
                 <form className="max-w-[850px] flex flex-auto  " >
                     <div className='flex flex-col flex-auto gap-5 p-5'>
-                        <CustomInput
-                            title='Name'
-                            name='name'
-                            handleChange={handleFormChange}
-                            color='primary'
-                            value={companyData.name}
-                        />
+                        <div className='flex gap-3'>
+                            <CustomInput
+                                title='Name'
+                                name='name'
+                                handleChange={handleFormChange}
+                                color='primary'
+                                value={companyData.name}
+                            />
+                            <CustomInput
+                                title='Location'
+                                name='location'
+                                handleChange={handleFormChange}
+                                color='primary'
+                                value={companyData.location}
+                            />
+                        </div>
                         <CustomTextArea
                             title='Description'
                             name='description'

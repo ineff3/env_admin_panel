@@ -76,6 +76,7 @@ export const addCompany = async (newCompany: unknown) => {
             body: JSON.stringify({
                 name: result.data.name,
                 description: result.data.description,
+                location: result.data.location
             }),
             agent
         };
@@ -113,6 +114,7 @@ export const editCompany = async (editedCompany: unknown) => {
                 id: result.data.id,
                 name: result.data.name,
                 description: result.data.description,
+                location: result.data.location
             }),
             agent
         };
