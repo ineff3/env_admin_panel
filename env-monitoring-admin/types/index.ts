@@ -93,3 +93,13 @@ export interface PassportDataType {
 export interface PassportType extends PassportDataType {
     id: number
 }
+
+export interface PollutionDataType {
+    factor_Name: string,
+    factor_value: string,
+    passport_id: string
+}
+
+export interface PollutionType extends PollutionDataType {
+    id: number
+}

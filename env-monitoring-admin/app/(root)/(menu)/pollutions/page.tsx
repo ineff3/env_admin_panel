@@ -1,9 +1,14 @@
+import { getPollutions } from "@/actions/pollutionsActions"
+import PollutionLogics from "./PollutionLogics"
+import { PollutionType } from "@/types";
 
 
-const Pollution = () => {
+const Pollutions = async () => {
+    const pollutionsArray = await getPollutions();
+
     return (
-        <div>Here are the pollution reports</div>
+        <PollutionLogics pollutions={pollutionsArray as PollutionType[]} />
     )
 }
 
-export default Pollution
+export default Pollutions
