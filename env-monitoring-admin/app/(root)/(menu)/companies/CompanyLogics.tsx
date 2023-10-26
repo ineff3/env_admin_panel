@@ -1,13 +1,12 @@
 'use client';
 import { CompanyDataType, CompanyType, TableColumns } from '@/types'
-import { CustomInput, CustomTextArea, DynamicTable, SuccessfulToast, ErrorToast } from '@/components';
+import { CustomInput, CustomTextArea, DynamicTable, SuccessfulToast, ErrorToast, AdvancedDynamicTable } from '@/components';
 import { AiOutlinePlus, AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai'
-import { BsFiletypeXlsx } from 'react-icons/bs'
-import { useEffect, useState } from 'react';
+import { RxCross2 } from 'react-icons/rx'
+import { useCallback, useEffect, useState } from 'react';
 import { Selection } from "@nextui-org/react";
-import getDataFromXlsx from '@/actions/xlsx/xlsxParser';
 import { toast } from 'react-hot-toast';
-import { CompanyArraySchema, CompanySchema } from '@/schemas';
+import { CompanySchema } from '@/schemas';
 import { addCompany, deleteCompany, editCompany } from '@/actions/companiesActions';
 
 //Keys should be as the passed items properties
@@ -24,6 +23,10 @@ const columns: TableColumns[] = [
         name: 'LOCATION',
         key: 'location'
     },
+    {
+        name: 'ACTIONS',
+        key: 'actions'
+    }
 ]
 
 const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
@@ -110,7 +113,7 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
 
         //client-side validation
         const result = CompanySchema.safeParse({
-            id: id,
+            id: Number(id),
             name: formData.get('name'),
             description: formData.get('description'),
             location: formData.get('location')
@@ -136,23 +139,37 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
         }
     }
 
-    const clientDeleteCompany = async (formData: FormData) => {
-        if (typeof selectedRow === 'string' || selectedRow.size === 0) {
-            alert("Row is not selected")
-            return;
-        }
-        const id: string = selectedRow.values().next().value;
-
-        resetFieldState();
-        resetRow();
-
+    const clientDeleteCompany = async (id: number) => {
         const response = await deleteCompany(id);
         if (response?.error) {
             toast.custom((t) => <ErrorToast t={t} message={response.error} />);
         } else {
             toast.custom((t) => <SuccessfulToast t={t} message='Company deleted successfully!' />, { duration: 2500 })
         }
+        resetFieldState();
+        resetRow();
+
     }
+
+    const renderCell = useCallback((company: CompanyType, columnKey: React.Key, itemId: number) => {
+        const cellValue = company[columnKey as keyof CompanyType];
+
+        switch (columnKey) {
+            case "actions":
+                return (
+                    <div className='flex justify-center items-center'>
+                        <button
+                            onClick={() => clientDeleteCompany(itemId)}
+                            className="  px-2 py-2 text-gray-500 bg-white rounded-full active:bg-gray-200 hover:scale-110 hover:transition-transform hover:duration-150"
+                        >
+                            <RxCross2 size={25} />
+                        </button>
+                    </div>
+                );
+            default:
+                return cellValue;
+        }
+    }, []);
 
 
 
@@ -198,12 +215,7 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
                             >
                                 <AiOutlineEdit color="white" size={30} />
                             </button>
-                            <button
-                                formAction={clientDeleteCompany}
-                                className="  px-3 py-2 text-white bg-primary rounded-lg shadow-sm active:bg-opacity-70 font-medium"
-                            >
-                                <AiOutlineDelete color="white" size={30} />
-                            </button>
+
                         </div>
                     </div>
                 </form>
@@ -211,12 +223,13 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
 
             <div className="flex justify-center">
                 <div className=" max-w-[950px] flex flex-auto  ">
-                    <DynamicTable
+                    <AdvancedDynamicTable
                         rowsLength={5}
                         tableItems={companies}
                         tableColumns={columns}
                         selectedRow={selectedRow}
                         setSelectedRow={setSelectedRow}
+                        renderCell={renderCell}
                     />
                 </div>
             </div>

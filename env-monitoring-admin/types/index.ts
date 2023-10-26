@@ -47,6 +47,15 @@ export interface DynamicTableProps {
     selectedRow: Selection
     setSelectedRow: (selectedRow: Selection) => void;
 }
+export interface AdvancedDynamicTableProps {
+    rowsLength: number
+    tableItems: any[];
+    tableColumns: TableColumns[];
+    isLoading?: boolean;
+    selectedRow: Selection
+    setSelectedRow: (selectedRow: Selection) => void;
+    renderCell: any
+}
 
 // -------------------------------------------------------------------
 export interface CustomServerResponse {

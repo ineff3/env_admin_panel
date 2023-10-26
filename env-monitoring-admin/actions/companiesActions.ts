@@ -133,13 +133,13 @@ export const editCompany = async (editedCompany: unknown) => {
 
 }
 
-export const deleteCompany = async (id: string) => {
+export const deleteCompany = async (id: number) => {
     try {
         const fetchOptions = {
             method: 'DELETE',
             agent
         }
-        const response = await fetch(`https://localhost:7001/api/CompanyData/id:int?id=${parseInt(id)}`, fetchOptions);
+        const response = await fetch(`https://localhost:7001/api/CompanyData/id:int?id=${id}`, fetchOptions);
         if (!response.ok) {
             const responseBody = await response.json() as CustomServerResponse;
             throw new Error(formatServerErrors(responseBody.errorMessages));

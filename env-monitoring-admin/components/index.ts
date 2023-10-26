@@ -6,6 +6,7 @@ import CustomTextArea from "./CustomTextArea";
 import SuccessfulToast from "./toasts/SuccessfulToast";
 import ErrorToast from "./toasts/ErrorToast";
 import CustomDropdown from "./CustomDropdown";
+import AdvancedDynamicTable from "./AdvancedDynamicTable";
 
 export {
     CustomInput,
@@ -15,5 +16,6 @@ export {
     DynamicTable,
     SuccessfulToast,
     ErrorToast,
-    CustomDropdown
+    CustomDropdown,
+    AdvancedDynamicTable
 }
