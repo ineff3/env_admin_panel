@@ -103,7 +103,7 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
 
     const clientEditCompany = async (formData: FormData) => {
         if (typeof selectedRow === 'string' || selectedRow.size === 0) {
-            alert("Row is not selected")
+            toast.custom((t) => <ErrorToast t={t} message={"Row is not selected"} />);
             return;
         }
         const id: string = selectedRow.values().next().value;
@@ -168,6 +168,7 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
                                 handleChange={handleFormChange}
                                 color='primary'
                                 value={companyData.name}
+                                required={true}
                             />
                             <CustomInput
                                 title='Location'

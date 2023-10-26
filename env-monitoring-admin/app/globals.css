@@ -6,8 +6,7 @@ html, body {
   height: 100%;
 }
 
-.myInput:focus + .myInputLabel,
-.myInput:valid + .myInputLabel {
+.myInput:focus + .myInputLabel {
     @apply
     text-primary px-1 -translate-x-3.5 -translate-y-[22px] scale-90
             transition-all duration-250 ease-in-out

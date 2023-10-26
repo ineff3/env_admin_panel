@@ -1,31 +1,12 @@
 import { z } from 'zod';
 
-export const EnterpriseSchema = z.object({
-    id: z.number().positive().int().optional(),
-    name: z.string().trim()
-        .min(1, { message: "Enterprise name should be at least 1 character long" })
-        .max(25, { message: "Enterprise name should be at most 25 character long" }),
-    location: z.string().trim()
-        .min(1, { message: "Enterprise location should be at least 1 character long" })
-        .max(25, { message: "Enterprise location should be at most 25 character long" }),
-    description: z.string().trim()
-        .min(1, { message: "Enterprise location should be at least 1 character long" })
-});
-
-export const EnterpriseArraySchema = z.array(EnterpriseSchema).nonempty({
-    message: "Can't be empty!",
-});
-
-//--------------------------------------------------------------------
 export const CompanySchema = z.object({
     id: z.number().positive().int().optional(),
     name: z.string().trim()
         .min(1, { message: "Company name should be at least 1 character long" })
         .max(45, { message: "Company name should be at most 45 character long" }),
-    description: z.string().trim()
-        .min(1, { message: "Company description should be at least 1 character long" }),
+    description: z.string().trim(),
     location: z.string().trim()
-        .min(1, { message: "Location name should be at least 1 character long" })
 });
 
 export const CompanyArraySchema = z.array(CompanySchema).nonempty({
@@ -35,7 +16,10 @@ export const CompanyArraySchema = z.array(CompanySchema).nonempty({
 export const PassportSchema = z.object({
     id: z.number().positive().int().optional(),
     company_id: z.number().positive().int(),
-    year: z.number().positive().int()
+    year: z.number().positive().int().refine(
+        (val) => val >= 2000 && val <= 2030,
+        "Year must be in range of 2000 to 2030"
+    )
 })
 
 export const PollutionSchema = z.object({

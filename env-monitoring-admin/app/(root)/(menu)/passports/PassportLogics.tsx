@@ -11,6 +11,10 @@ import { addPassport, deletePassport, editPassport } from "@/actions/passportsAc
 
 const columns: TableColumns[] = [
     {
+        name: 'PASSPORT ID',
+        key: 'id'
+    },
+    {
         name: 'COMPANY NAME',
         key: 'company_name'
     },
@@ -111,7 +115,7 @@ const PassportLogics = ({ companyNamesArray, passports, companies, passportsToSh
 
     const clientEditPassport = async (formData: FormData) => {
         if (typeof selectedRow === 'string' || selectedRow.size === 0) {
-            alert("Row is not selected")
+            toast.custom((t) => <ErrorToast t={t} message={"Row is not selected"} />);
             return;
         }
         const id: string = selectedRow.values().next().value;
@@ -178,20 +182,23 @@ const PassportLogics = ({ companyNamesArray, passports, companies, passportsToSh
             <div className='flex justify-center'>
                 <form className="max-w-[850px] flex flex-auto  " >
                     <div className='flex flex-col flex-auto gap-5 p-5'>
-                        <CustomInput
-                            title='Year'
-                            name='year'
-                            handleChange={handleFormChange}
-                            color='primary'
-                            value={passportData.year}
-                        />
-                        <CustomDropdown
-                            name="company_id"
-                            options={companyNamesArray}
-                            value={passportData.company_id}
-                            handleChange={handleFormChange}
-                            color="primary"
-                        />
+                        <div className="flex gap-3">
+                            <CustomDropdown
+                                name="company_id"
+                                options={companyNamesArray}
+                                value={passportData.company_id}
+                                handleChange={handleFormChange}
+                                color="primary"
+                            />
+                            <CustomInput
+                                title='Year'
+                                name='year'
+                                handleChange={handleFormChange}
+                                color='primary'
+                                value={passportData.year}
+                                required={true}
+                            />
+                        </div>
                         <div className='flex gap-5 justify-center'>
                             <button
                                 formAction={clientAddPassport}

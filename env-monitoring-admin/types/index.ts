@@ -7,6 +7,7 @@ export interface CustomInputProps {
     name: string;
     handleChange: ChangeEventHandler<HTMLInputElement>;
     value?: string;
+    required?: boolean;
 }
 export interface CustomTextAreaProps {
     title: string;
@@ -14,6 +15,7 @@ export interface CustomTextAreaProps {
     name: string;
     handleChange: ChangeEventHandler<HTMLTextAreaElement>;
     value?: string;
+    required?: boolean;
 }
 export interface CustomDropdownProps {
     color: string,
@@ -36,6 +38,7 @@ export interface TableColumns {
     name: string;
     key: string;
 }
+
 export interface DynamicTableProps {
     rowsLength: number
     tableItems: any[];
@@ -45,15 +48,6 @@ export interface DynamicTableProps {
     setSelectedRow: (selectedRow: Selection) => void;
 }
 
-export interface CustomButtonSelectionProps {
-    passedData: {}
-    apiRoute: string
-    resetFieldsData: () => void;
-    fieldsCorrect: () => boolean;
-    selectedRow: Selection;
-    resetRow: () => void;
-    setTableData: (tableData: any[]) => void;
-}
 // -------------------------------------------------------------------
 export interface CustomServerResponse {
     statusCode: number;

@@ -113,7 +113,7 @@ const PollutionLogics = ({ pollutions }: { pollutions: PollutionType[] }) => {
 
     const clientEditPollution = async (formData: FormData) => {
         if (typeof selectedRow === 'string' || selectedRow.size === 0) {
-            alert("Row is not selected")
+            toast.custom((t) => <ErrorToast t={t} message={"Row is not selected"} />);
             return;
         }
         const id: string = selectedRow.values().next().value;
@@ -209,6 +209,7 @@ const PollutionLogics = ({ pollutions }: { pollutions: PollutionType[] }) => {
                             handleChange={handleFormChange}
                             color='primary'
                             value={pollutionData.factor_Name}
+                            required={true}
                         />
                         <div className=' flex gap-3'>
                             <CustomInput
@@ -217,6 +218,7 @@ const PollutionLogics = ({ pollutions }: { pollutions: PollutionType[] }) => {
                                 handleChange={handleFormChange}
                                 color='primary'
                                 value={pollutionData.factor_value}
+                                required={true}
                             />
                             <CustomInput
                                 title='Passport'
@@ -224,6 +226,7 @@ const PollutionLogics = ({ pollutions }: { pollutions: PollutionType[] }) => {
                                 handleChange={handleFormChange}
                                 color='primary'
                                 value={pollutionData.passport_id}
+                                required={true}
                             />
                         </div>
 
