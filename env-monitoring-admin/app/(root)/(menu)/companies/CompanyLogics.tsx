@@ -1,9 +1,9 @@
 'use client';
 import { CompanyDataType, CompanyType, TableColumns } from '@/types'
-import { CustomInput, CustomTextArea, DynamicTable, SuccessfulToast, ErrorToast, AdvancedDynamicTable } from '@/components';
-import { AiOutlinePlus, AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai'
-import { RxCross2 } from 'react-icons/rx'
-import { useCallback, useEffect, useState } from 'react';
+import { CustomInput, CustomTextArea, SuccessfulToast, ErrorToast, AdvancedDynamicTable } from '@/components';
+import { AiOutlinePlus, AiOutlineEdit } from 'react-icons/ai'
+import { MdEditNote } from 'react-icons/md'
+import { useEffect, useState } from 'react';
 import { Selection } from "@nextui-org/react";
 import { toast } from 'react-hot-toast';
 import { CompanySchema } from '@/schemas';
@@ -22,10 +22,6 @@ const columns: TableColumns[] = [
     {
         name: 'LOCATION',
         key: 'location'
-    },
-    {
-        name: 'ACTIONS',
-        key: 'actions'
     }
 ]
 
@@ -151,27 +147,6 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
 
     }
 
-    const renderCell = useCallback((company: CompanyType, columnKey: React.Key, itemId: number) => {
-        const cellValue = company[columnKey as keyof CompanyType];
-
-        switch (columnKey) {
-            case "actions":
-                return (
-                    <div className='flex justify-center items-center'>
-                        <button
-                            onClick={() => clientDeleteCompany(itemId)}
-                            className="  px-2 py-2 text-gray-500 bg-white rounded-full active:bg-gray-200 hover:scale-110 hover:transition-transform hover:duration-150"
-                        >
-                            <RxCross2 size={25} />
-                        </button>
-                    </div>
-                );
-            default:
-                return cellValue;
-        }
-    }, []);
-
-
 
     return (
         <div className=" flex flex-col  gap-5">
@@ -207,13 +182,19 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
                                 formAction={clientAddCompany}
                                 className="  px-3 py-2 text-white bg-primary rounded-lg shadow-sm active:bg-opacity-70 font-medium"
                             >
-                                <AiOutlinePlus color="white" size={30} />
+                                <div className='flex gap-1 justify-center items-center'>
+                                    <p className=' hidden md:flex'>Create Company</p>
+                                    <AiOutlinePlus size={30} />
+                                </div>
                             </button>
                             <button
                                 formAction={clientEditCompany}
                                 className="  px-3 py-2 text-white bg-primary rounded-lg shadow-sm active:bg-opacity-70 font-medium"
                             >
-                                <AiOutlineEdit color="white" size={30} />
+                                <div className='flex gap-1 justify-center items-center'>
+                                    <p className=' hidden md:flex'>Edit Company</p>
+                                    <MdEditNote size={30} />
+                                </div>
                             </button>
 
                         </div>
@@ -229,7 +210,7 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
                         tableColumns={columns}
                         selectedRow={selectedRow}
                         setSelectedRow={setSelectedRow}
-                        renderCell={renderCell}
+                        deleteItem={clientDeleteCompany}
                     />
                 </div>
             </div>

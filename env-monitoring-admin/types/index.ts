@@ -54,7 +54,7 @@ export interface AdvancedDynamicTableProps {
     isLoading?: boolean;
     selectedRow: Selection
     setSelectedRow: (selectedRow: Selection) => void;
-    renderCell: any
+    deleteItem: (id: number) => void;
 }
 
 // -------------------------------------------------------------------

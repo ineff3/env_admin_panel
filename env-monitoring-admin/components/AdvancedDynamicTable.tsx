@@ -1,12 +1,19 @@
 'use client';
-import { AdvancedDynamicTableProps, DynamicTableProps } from "@/types";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, getKeyValue, Pagination } from "@nextui-org/react";
-import { useState, useMemo } from "react";
+import { AdvancedDynamicTableProps } from "@/types";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, Pagination } from "@nextui-org/react";
+import { useState, useMemo, useCallback } from "react";
+import { RxCross2 } from 'react-icons/rx'
 
 
-const AdvancedDynamicTable = ({ rowsLength, tableItems, tableColumns, isLoading, selectedRow, setSelectedRow, renderCell }: AdvancedDynamicTableProps) => {
+const AdvancedDynamicTable = ({ rowsLength, tableItems, tableColumns, isLoading, selectedRow, setSelectedRow, deleteItem }: AdvancedDynamicTableProps) => {
     const [page, setPage] = useState(1);
-
+    const [columns, setColumns] = useState([
+        ...tableColumns,
+        {
+            name: '',
+            key: 'actions'
+        }
+    ])
 
     //Pagination logic
     const rowsPerPage = rowsLength;
@@ -17,6 +24,27 @@ const AdvancedDynamicTable = ({ rowsLength, tableItems, tableColumns, isLoading,
 
         return tableItems.slice(start, end);
     }, [page, tableItems]);
+
+    // cells rendering
+    const renderCell = useCallback((company: any, columnKey: React.Key, itemId: number) => {
+        const cellValue = company[columnKey as keyof any];
+
+        switch (columnKey) {
+            case "actions":
+                return (
+                    <div className='flex justify-center items-center'>
+                        <button
+                            onClick={() => deleteItem(itemId)}
+                            className="  px-2 py-2 text-gray-500 bg-white rounded-full active:bg-gray-200 hover:scale-110 hover:transition-transform hover:duration-150"
+                        >
+                            <RxCross2 size={25} />
+                        </button>
+                    </div>
+                );
+            default:
+                return cellValue;
+        }
+    }, []);
 
     return (
         <Table
@@ -44,7 +72,7 @@ const AdvancedDynamicTable = ({ rowsLength, tableItems, tableColumns, isLoading,
 
             }
         >
-            <TableHeader columns={tableColumns}>
+            <TableHeader columns={columns}>
                 {(column) => <TableColumn key={column.key}>{column.name}</TableColumn>}
             </TableHeader>
             <TableBody
