@@ -1,7 +1,7 @@
 'use client';
 import { CompanyDataType, CompanyType, TableColumns } from '@/types'
-import { CustomInput, CustomTextArea, SuccessfulToast, ErrorToast, AdvancedDynamicTable } from '@/components';
-import { AiOutlinePlus, AiOutlineEdit } from 'react-icons/ai'
+import { CustomInput, CustomTextArea, SuccessfulToast, ErrorToast, DynamicTable, CustomBtn } from '@/components';
+import { AiOutlinePlus } from 'react-icons/ai'
 import { MdEditNote } from 'react-icons/md'
 import { useEffect, useState } from 'react';
 import { Selection } from "@nextui-org/react";
@@ -178,25 +178,16 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
                             value={companyData.description}
                         />
                         <div className='flex gap-5 justify-center'>
-                            <button
-                                formAction={clientAddCompany}
-                                className="  px-3 py-2 text-white bg-primary rounded-lg shadow-sm active:bg-opacity-70 font-medium"
-                            >
-                                <div className='flex gap-1 justify-center items-center'>
-                                    <p className=' hidden md:flex'>Create Company</p>
-                                    <AiOutlinePlus size={30} />
-                                </div>
-                            </button>
-                            <button
-                                formAction={clientEditCompany}
-                                className="  px-3 py-2 text-white bg-primary rounded-lg shadow-sm active:bg-opacity-70 font-medium"
-                            >
-                                <div className='flex gap-1 justify-center items-center'>
-                                    <p className=' hidden md:flex'>Edit Company</p>
-                                    <MdEditNote size={30} />
-                                </div>
-                            </button>
-
+                            <CustomBtn
+                                title="Add Company"
+                                icon={<AiOutlinePlus size={30} />}
+                                formActionFunction={clientAddCompany}
+                            />
+                            <CustomBtn
+                                title="Edit Company"
+                                icon={<MdEditNote size={30} />}
+                                formActionFunction={clientEditCompany}
+                            />
                         </div>
                     </div>
                 </form>
@@ -204,7 +195,7 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
 
             <div className="flex justify-center">
                 <div className=" max-w-[950px] flex flex-auto  ">
-                    <AdvancedDynamicTable
+                    <DynamicTable
                         rowsLength={5}
                         tableItems={companies}
                         tableColumns={columns}

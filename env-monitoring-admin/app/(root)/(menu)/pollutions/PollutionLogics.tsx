@@ -1,15 +1,15 @@
 'use client';
 import { PollutionDataType, PollutionType, TableColumns } from '@/types'
-import { CustomInput, CustomTextArea, DynamicTable, SuccessfulToast, ErrorToast } from '@/components';
-import { AiOutlinePlus, AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai'
+import { CustomInput, DynamicTable, SuccessfulToast, ErrorToast, CustomBtn } from '@/components';
+import { AiOutlinePlus } from 'react-icons/ai'
 import { BsFiletypeXlsx } from 'react-icons/bs'
 import { useEffect, useState } from 'react';
 import { Selection } from "@nextui-org/react";
 import getDataFromXlsx from '@/actions/xlsx/xlsxParser';
 import { toast } from 'react-hot-toast';
-import { CompanyArraySchema, CompanySchema, PollutionArraySchema, PollutionSchema } from '@/schemas';
-import { addCompany, deleteCompany, editCompany } from '@/actions/companiesActions';
+import { PollutionArraySchema, PollutionSchema } from '@/schemas';
 import { addPollution, createPollutionFromXlsx, deletePollution, editPollution } from '@/actions/pollutionsActions';
+import { MdEditNote } from 'react-icons/md';
 
 //Keys should be as the passed items properties
 const columns: TableColumns[] = [
@@ -132,7 +132,7 @@ const PollutionLogics = ({ pollutions }: { pollutions: PollutionType[] }) => {
         }
         // client-side validation
         const result = PollutionSchema.safeParse({
-            id: id,
+            id: Number(id),
             factor_Name: formData.get('factor_Name'),
             factor_value: factor_value,
             passport_id: passport_id
@@ -158,22 +158,15 @@ const PollutionLogics = ({ pollutions }: { pollutions: PollutionType[] }) => {
         }
     }
 
-    const clientDeletePollution = async (formData: FormData) => {
-        if (typeof selectedRow === 'string' || selectedRow.size === 0) {
-            alert("Row is not selected")
-            return;
-        }
-        const id: string = selectedRow.values().next().value;
-
-        resetFieldState();
-        resetRow();
-
+    const clientDeletePollution = async (id: number) => {
         const response = await deletePollution(id);
         if (response?.error) {
             toast.custom((t) => <ErrorToast t={t} message={response.error} />);
         } else {
-            toast.custom((t) => <SuccessfulToast t={t} message='Company deleted successfully!' />, { duration: 2500 })
+            toast.custom((t) => <SuccessfulToast t={t} message='Pollution deleted successfully!' />, { duration: 2500 })
         }
+        resetFieldState();
+        resetRow();
     }
 
     const clientAddManyCompanies = async () => {
@@ -231,24 +224,16 @@ const PollutionLogics = ({ pollutions }: { pollutions: PollutionType[] }) => {
                         </div>
 
                         <div className='flex gap-5 justify-center'>
-                            <button
-                                formAction={clientAddPollution}
-                                className="  px-3 py-2 text-white bg-primary rounded-lg shadow-sm active:bg-opacity-70 font-medium"
-                            >
-                                <AiOutlinePlus color="white" size={30} />
-                            </button>
-                            <button
-                                formAction={clientEditPollution}
-                                className="  px-3 py-2 text-white bg-primary rounded-lg shadow-sm active:bg-opacity-70 font-medium"
-                            >
-                                <AiOutlineEdit color="white" size={30} />
-                            </button>
-                            <button
-                                formAction={clientDeletePollution}
-                                className="  px-3 py-2 text-white bg-primary rounded-lg shadow-sm active:bg-opacity-70 font-medium"
-                            >
-                                <AiOutlineDelete color="white" size={30} />
-                            </button>
+                            <CustomBtn
+                                title="Add Pollution"
+                                icon={<AiOutlinePlus size={30} />}
+                                formActionFunction={clientAddPollution}
+                            />
+                            <CustomBtn
+                                title="Edit Pollution"
+                                icon={<MdEditNote size={30} />}
+                                formActionFunction={clientEditPollution}
+                            />
                         </div>
                     </div>
                 </form>
@@ -262,6 +247,7 @@ const PollutionLogics = ({ pollutions }: { pollutions: PollutionType[] }) => {
                         tableColumns={columns}
                         selectedRow={selectedRow}
                         setSelectedRow={setSelectedRow}
+                        deleteItem={clientDeletePollution}
                     />
                 </div>
             </div>

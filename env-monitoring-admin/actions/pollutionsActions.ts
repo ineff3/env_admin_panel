@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 import https from 'https';
 import { CustomServerResponse } from '@/types';
 import { revalidatePath } from 'next/cache';
-import { CompanySchema, PollutionArraySchema, PollutionSchema } from '@/schemas';
+import { PollutionArraySchema, PollutionSchema } from '@/schemas';
 
 const agent = new https.Agent({
     rejectUnauthorized: false
@@ -134,13 +134,13 @@ export const editPollution = async (editedPollution: unknown) => {
 
 }
 
-export const deletePollution = async (id: string) => {
+export const deletePollution = async (id: number) => {
     try {
         const fetchOptions = {
             method: 'DELETE',
             agent
         }
-        const response = await fetch(`https://localhost:7001/api/EnvData/id:int?id=${parseInt(id)}`, fetchOptions);
+        const response = await fetch(`https://localhost:7001/api/EnvData/id:int?id=${id}`, fetchOptions);
         if (!response.ok) {
             const responseBody = await response.json() as CustomServerResponse;
             throw new Error(formatServerErrors(responseBody.errorMessages));

@@ -1,5 +1,6 @@
 import { ChangeEventHandler } from "react";
 import { Selection } from "@nextui-org/react";
+import { IconType } from "react-icons/lib";
 
 export interface CustomInputProps {
     title: string;
@@ -46,15 +47,13 @@ export interface DynamicTableProps {
     isLoading?: boolean;
     selectedRow: Selection
     setSelectedRow: (selectedRow: Selection) => void;
-}
-export interface AdvancedDynamicTableProps {
-    rowsLength: number
-    tableItems: any[];
-    tableColumns: TableColumns[];
-    isLoading?: boolean;
-    selectedRow: Selection
-    setSelectedRow: (selectedRow: Selection) => void;
     deleteItem: (id: number) => void;
+}
+
+export interface CustomBtnProps {
+    title: string
+    icon: React.ReactNode
+    formActionFunction: (formData: FormData) => void
 }
 
 // -------------------------------------------------------------------

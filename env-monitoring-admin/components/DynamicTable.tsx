@@ -1,21 +1,50 @@
 'use client';
 import { DynamicTableProps } from "@/types";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, getKeyValue, Pagination } from "@nextui-org/react";
-import { useState, useMemo } from "react";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, Pagination } from "@nextui-org/react";
+import { useState, useMemo, useCallback } from "react";
+import { RxCross2 } from 'react-icons/rx'
 
 
-const DynamicTable = ({ rowsLength, tableItems, tableColumns, isLoading, selectedRow, setSelectedRow }: DynamicTableProps) => {
+const DynamicTable = ({ rowsLength, tableItems, tableColumns, isLoading, selectedRow, setSelectedRow, deleteItem }: DynamicTableProps) => {
     const [page, setPage] = useState(1);
+    const [columns, setColumns] = useState([
+        ...tableColumns,
+        {
+            name: '',
+            key: 'actions'
+        }
+    ])
+
+    //Pagination logic
     const rowsPerPage = rowsLength;
-
     const pages = Math.ceil(tableItems.length / rowsPerPage);
-
     const items = useMemo(() => {
         const start = (page - 1) * rowsPerPage;
         const end = start + rowsPerPage;
 
         return tableItems.slice(start, end);
     }, [page, tableItems]);
+
+    // cells rendering
+    const renderCell = useCallback((company: any, columnKey: React.Key, itemId: number) => {
+        const cellValue = company[columnKey as keyof any];
+
+        switch (columnKey) {
+            case "actions":
+                return (
+                    <div className='flex justify-center items-center'>
+                        <button
+                            onClick={() => deleteItem(itemId)}
+                            className="  px-2 py-2 text-gray-500 bg-white rounded-full active:bg-gray-200 hover:scale-110 hover:transition-transform hover:duration-150"
+                        >
+                            <RxCross2 size={25} />
+                        </button>
+                    </div>
+                );
+            default:
+                return cellValue;
+        }
+    }, []);
 
     return (
         <Table
@@ -43,7 +72,7 @@ const DynamicTable = ({ rowsLength, tableItems, tableColumns, isLoading, selecte
 
             }
         >
-            <TableHeader columns={tableColumns}>
+            <TableHeader columns={columns}>
                 {(column) => <TableColumn key={column.key}>{column.name}</TableColumn>}
             </TableHeader>
             <TableBody
@@ -53,8 +82,8 @@ const DynamicTable = ({ rowsLength, tableItems, tableColumns, isLoading, selecte
                 items={items}
             >
                 {(item) => (
-                    <TableRow key={item.user_id}>
-                        {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
+                    <TableRow key={item.id}>
+                        {(columnKey) => <TableCell>{renderCell(item, columnKey, item.id)}</TableCell>}
                     </TableRow>
                 )}
             </TableBody>

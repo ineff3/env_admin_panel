@@ -131,13 +131,13 @@ export const editPassport = async (editedPassport: unknown) => {
 
 }
 
-export const deletePassport = async (id: string) => {
+export const deletePassport = async (id: number) => {
     try {
         const fetchOptions = {
             method: 'DELETE',
             agent
         }
-        const response = await fetch(`https://localhost:7001/api/PassportData/id:int?id=${parseInt(id)}`, fetchOptions);
+        const response = await fetch(`https://localhost:7001/api/PassportData/id:int?id=${id}`, fetchOptions);
         if (!response.ok) {
             const responseBody = await response.json() as CustomServerResponse;
             throw new Error(formatServerErrors(responseBody.errorMessages));

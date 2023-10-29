@@ -1,13 +1,14 @@
 'use client';
 import { CompanyNamesArrayType, CompanyType, PassportDataType, PassportType } from "@/types"
 import { TableColumns } from '@/types'
-import { CustomInput, CustomDropdown, DynamicTable, SuccessfulToast, ErrorToast } from '@/components';
-import { AiOutlinePlus, AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai'
+import { CustomInput, CustomDropdown, DynamicTable, SuccessfulToast, ErrorToast, CustomBtn } from '@/components';
+import { AiOutlinePlus } from 'react-icons/ai'
 import { useEffect, useState } from 'react';
 import { Selection } from "@nextui-org/react";
 import { toast } from 'react-hot-toast';
 import { PassportSchema } from '@/schemas';
 import { addPassport, deletePassport, editPassport } from "@/actions/passportsActions";
+import { MdEditNote } from "react-icons/md";
 
 const columns: TableColumns[] = [
     {
@@ -134,7 +135,7 @@ const PassportLogics = ({ companyNamesArray, passports, companies, passportsToSh
 
         //client-side validation
         const result = PassportSchema.safeParse({
-            id: id,
+            id: Number(id),
             company_id: company_id,
             year: year
         });
@@ -159,22 +160,15 @@ const PassportLogics = ({ companyNamesArray, passports, companies, passportsToSh
         }
     }
 
-    const clientDeletePassport = async (formData: FormData) => {
-        if (typeof selectedRow === 'string' || selectedRow.size === 0) {
-            alert("Row is not selected")
-            return;
-        }
-        const id: string = selectedRow.values().next().value;
-
-        resetFieldState();
-        resetRow();
-
+    const clientDeletePassport = async (id: number) => {
         const response = await deletePassport(id);
         if (response?.error) {
             toast.custom((t) => <ErrorToast t={t} message={response.error} />);
         } else {
             toast.custom((t) => <SuccessfulToast t={t} message='Company deleted successfully!' />, { duration: 2500 })
         }
+        resetFieldState();
+        resetRow();
     }
 
     return (
@@ -200,24 +194,16 @@ const PassportLogics = ({ companyNamesArray, passports, companies, passportsToSh
                             />
                         </div>
                         <div className='flex gap-5 justify-center'>
-                            <button
-                                formAction={clientAddPassport}
-                                className="  px-3 py-2 text-white bg-primary rounded-lg shadow-sm active:bg-opacity-70 font-medium"
-                            >
-                                <AiOutlinePlus color="white" size={30} />
-                            </button>
-                            <button
-                                formAction={clientEditPassport}
-                                className="  px-3 py-2 text-white bg-primary rounded-lg shadow-sm active:bg-opacity-70 font-medium"
-                            >
-                                <AiOutlineEdit color="white" size={30} />
-                            </button>
-                            <button
-                                formAction={clientDeletePassport}
-                                className="  px-3 py-2 text-white bg-primary rounded-lg shadow-sm active:bg-opacity-70 font-medium"
-                            >
-                                <AiOutlineDelete color="white" size={30} />
-                            </button>
+                            <CustomBtn
+                                title="Add Passport"
+                                icon={<AiOutlinePlus size={30} />}
+                                formActionFunction={clientAddPassport}
+                            />
+                            <CustomBtn
+                                title="Edit Passport"
+                                icon={<MdEditNote size={30} />}
+                                formActionFunction={clientEditPassport}
+                            />
                         </div>
                     </div>
                 </form>
@@ -231,6 +217,7 @@ const PassportLogics = ({ companyNamesArray, passports, companies, passportsToSh
                         tableColumns={columns}
                         selectedRow={selectedRow}
                         setSelectedRow={setSelectedRow}
+                        deleteItem={clientDeletePassport}
                     />
                 </div>
             </div>
