@@ -6,7 +6,7 @@ import { RxCross2 } from 'react-icons/rx'
 import { HiMagnifyingGlass } from 'react-icons/hi2'
 
 
-const DynamicTable = ({ rowsLength, tableItems, tableColumns, isLoading, selectedRow, setSelectedRow, deleteItem, withSearchBar, filterFunction }: DynamicTableProps) => {
+const DynamicSearchTable = ({ rowsLength, tableItems, tableColumns, isLoading, selectedRow, setSelectedRow, deleteItem }: DynamicTableProps) => {
     const [filterValue, setFilterValue] = useState('');
     const [page, setPage] = useState(1);
     const [columns, setColumns] = useState([
@@ -23,9 +23,9 @@ const DynamicTable = ({ rowsLength, tableItems, tableColumns, isLoading, selecte
         let filteredItems = [...tableItems];
 
         if (hasSearchFilter) {
-            if (filterFunction) {
-                filteredItems = filterFunction(filteredItems, filterValue)
-            }
+            filteredItems = filteredItems.filter((item) =>
+                item.passport_id == filterValue
+            );
         }
         return filteredItems;
     }, [filterValue, tableItems]);
@@ -97,7 +97,7 @@ const DynamicTable = ({ rowsLength, tableItems, tableColumns, isLoading, selecte
             selectionMode="single"
             selectedKeys={selectedRow}
             onSelectionChange={setSelectedRow}
-            topContent={withSearchBar ? topContent : <></>}
+            topContent={topContent}
             bottomContent={isLoading || tableItems.length === 0 ? <></> :
                 <div className="flex w-full justify-center">
                     <Pagination
@@ -132,7 +132,7 @@ const DynamicTable = ({ rowsLength, tableItems, tableColumns, isLoading, selecte
     )
 }
 
-export default DynamicTable
+export default DynamicSearchTable
 
 // {(columnKey) => <TableCell>{Object.values(item)[columnKey.slice(2)]}</TableCell>}
 // {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}

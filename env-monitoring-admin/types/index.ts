@@ -48,6 +48,8 @@ export interface DynamicTableProps {
     selectedRow: Selection
     setSelectedRow: (selectedRow: Selection) => void;
     deleteItem: (id: number) => void;
+    withSearchBar?: boolean
+    filterFunction?: (items: any, filterValue: string) => typeof items
 }
 
 export interface CustomBtnProps {

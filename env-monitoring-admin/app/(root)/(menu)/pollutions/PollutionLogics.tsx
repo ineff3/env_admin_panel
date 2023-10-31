@@ -1,6 +1,6 @@
 'use client';
-import { PollutionDataType, PollutionType, TableColumns } from '@/types'
-import { CustomInput, DynamicTable, SuccessfulToast, ErrorToast, CustomBtn } from '@/components';
+import { PassportType, PollutionDataType, PollutionType, TableColumns } from '@/types'
+import { CustomInput, DynamicTable, SuccessfulToast, ErrorToast, CustomBtn, DynamicSearchTable } from '@/components';
 import { AiOutlinePlus } from 'react-icons/ai'
 import { BsFiletypeXlsx } from 'react-icons/bs'
 import { useEffect, useState } from 'react';
@@ -242,12 +242,17 @@ const PollutionLogics = ({ pollutions }: { pollutions: PollutionType[] }) => {
             <div className="flex justify-center">
                 <div className=" max-w-[950px] flex flex-auto  ">
                     <DynamicTable
-                        rowsLength={8}
+                        rowsLength={6}
                         tableItems={pollutions}
                         tableColumns={columns}
                         selectedRow={selectedRow}
                         setSelectedRow={setSelectedRow}
                         deleteItem={clientDeletePollution}
+                        withSearchBar
+                        filterFunction={(items, filterValue) => {
+                            return items.filter((item: PollutionType) =>
+                                item.passport_id == filterValue)
+                        }}
                     />
                 </div>
             </div>
