@@ -67,7 +67,7 @@ const DynamicTable = ({ rowsLength, tableItems, tableColumns, isLoading, selecte
             <div className=' max-w-sm p-3 flex items-center  gap-2 text-gray-500 bg-gray-100 rounded-3xl hover:bg-opacity-50'>
                 <HiMagnifyingGlass size={22} />
                 <input
-                    className=' bg-transparent focus:outline-none'
+                    className=' bg-transparent focus:outline-none w-full'
                     type="text"
                     placeholder='Search by passport_id'
                     value={filterValue}
