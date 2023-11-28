@@ -4,6 +4,7 @@ import { RxDashboard } from 'react-icons/rx'
 import { PiFactory, PiNewspaperClipping, PiTrash, PiGear } from 'react-icons/pi'
 import { usePathname } from 'next/navigation'
 import { NavbarProps } from '@/types';
+import { MdCloudQueue } from "react-icons/md";
 
 
 const Navbar = ({ handleNav }: NavbarProps) => {
@@ -49,9 +50,9 @@ const Navbar = ({ handleNav }: NavbarProps) => {
                 </Link>
             </nav>
             <nav >
-                <Link className={pathname === '/settings' ? activeLinkStyles : inactiveLinkStyles + inactiveHoverStyles} href={'/settings'}>
-                    <PiGear size={25} />
-                    Settings
+                <Link className={pathname === '/rfc-factors' ? activeLinkStyles : inactiveLinkStyles + inactiveHoverStyles} href={'/rfc-factors'}>
+                    <MdCloudQueue size={25} />
+                    RFC Factors
                 </Link>
             </nav>
         </aside>

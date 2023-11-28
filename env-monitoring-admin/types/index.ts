@@ -93,3 +93,12 @@ export interface PollutionDataType {
 export interface PollutionType extends PollutionDataType {
     id: number
 }
+
+export interface rfcFactorDataType {
+    factor_Name: string,
+    factor_value: string,
+}
+
+export interface rfcFactorType extends rfcFactorDataType {
+    id: number
+}

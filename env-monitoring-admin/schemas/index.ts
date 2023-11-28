@@ -34,3 +34,15 @@ export const PollutionSchema = z.object({
 export const PollutionArraySchema = z.array(PollutionSchema).nonempty({
     message: "Can't be empty!",
 });
+
+export const RfcFactorSchema = z.object({
+    id: z.number().positive().int().optional(),
+    factor_Name: z.string().trim()
+        .min(1, { message: "Pollution name should be at least 1 character long" })
+        .max(150, { message: "Pollution name should be at most 150 character long" }),
+    factor_value: z.number().positive(),
+})
+
+export const RfcFactorArraySchema = z.array(RfcFactorSchema).nonempty({
+    message: "Can't be empty!",
+});
