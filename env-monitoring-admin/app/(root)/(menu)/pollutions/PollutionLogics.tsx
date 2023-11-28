@@ -1,6 +1,6 @@
 'use client';
-import { PassportType, PollutionDataType, PollutionType, TableColumns } from '@/types'
-import { CustomInput, DynamicTable, SuccessfulToast, ErrorToast, CustomBtn, DynamicSearchTable } from '@/components';
+import { PassportType, PollutionDataType, PollutionType, TableColumns, rfcFactorType } from '@/types'
+import { CustomInput, DynamicTable, SuccessfulToast, ErrorToast, CustomBtn, DynamicSearchTable, CustomSearchDropdown } from '@/components';
 import { AiOutlinePlus } from 'react-icons/ai'
 import { BsFiletypeXlsx } from 'react-icons/bs'
 import { useEffect, useState } from 'react';
@@ -35,17 +35,21 @@ const columns: TableColumns[] = [
     },
     {
         name: 'RFC',
-        key: 'rfc_factor_id'
+        key: 'rfc_factor_name'
 
     }
 ]
 
-const PollutionLogics = ({ pollutions }: { pollutions: PollutionType[] }) => {
+const PollutionLogics = ({ pollutions, pollsWithRfcFactorsNames, rfcFactorsNames, rfcFactors }: { pollutions: PollutionType[], pollsWithRfcFactorsNames: any, rfcFactorsNames: string[], rfcFactors: rfcFactorType[] }) => {
     const [pollutionData, setPollutionData] = useState<PollutionDataType>({
         factor_Name: '',
         factor_value: '',
-        passport_id: ''
+        passport_id: '',
+        factor_Ca_value: '',
+        factor_Ch_value: '',
+        rfc_factor_id: '',
     })
+    const [selectedRfcFactor, setSelectedRfcFactor] = useState('')
     const [selectedRow, setSelectedRow] = useState<Selection>(new Set());
 
     //Executes whenever selectedRow changes to some actual row
@@ -56,11 +60,17 @@ const PollutionLogics = ({ pollutions }: { pollutions: PollutionType[] }) => {
             const selectedPollution = pollutions.find(pollution => pollution.id === +id);
 
             if (selectedPollution !== undefined) {
+                const companyName = getRfcFactorNameById(Number(selectedPollution.rfc_factor_id))
+                setSelectedRfcFactor(companyName || '')
                 setPollutionData({
                     factor_Name: selectedPollution.factor_Name,
                     factor_value: selectedPollution.factor_value,
-                    passport_id: selectedPollution.passport_id
+                    passport_id: selectedPollution.passport_id,
+                    factor_Ca_value: selectedPollution.factor_Ca_value,
+                    factor_Ch_value: selectedPollution.factor_Ch_value,
+                    rfc_factor_id: selectedPollution.rfc_factor_id
                 })
+
             }
         } else {
             resetFieldState()
@@ -71,8 +81,12 @@ const PollutionLogics = ({ pollutions }: { pollutions: PollutionType[] }) => {
         setPollutionData({
             factor_Name: '',
             factor_value: '',
-            passport_id: ''
+            passport_id: '',
+            factor_Ca_value: '',
+            factor_Ch_value: '',
+            rfc_factor_id: ''
         });
+        setSelectedRfcFactor('')
     }
     function resetRow() {
         setSelectedRow(new Set());
@@ -85,23 +99,28 @@ const PollutionLogics = ({ pollutions }: { pollutions: PollutionType[] }) => {
         })
     }
 
-    const clientAddPollution = async (formData: FormData) => {
-        const factor_value = Number(formData.get('factor_value'))
-        const passport_id = Number(formData.get('passport_id'));
+    function getRfcFactorIdByName(rfcFactorName: string) {
+        return rfcFactors.find(rfcFactor => rfcFactor.factor_Name === rfcFactorName)?.id;
+    }
+    function getRfcFactorNameById(rfcFactorId: number) {
+        return rfcFactors.find(rfcFactor => rfcFactor.id === rfcFactorId)?.factor_Name;
+    }
 
-        if (isNaN(factor_value)) {
-            toast.custom((t) => <ErrorToast t={t} message={"amount is not a number"} />);
-            return;
+    const clientAddPollution = async (formData: FormData) => {
+        if (selectedRfcFactor === '') {
+            toast.custom((t) => <ErrorToast t={t} message={"Rfc Factor should be selected"} />);
+            return
         }
-        if (isNaN(passport_id)) {
-            toast.custom((t) => <ErrorToast t={t} message={"passport_id is not a number"} />);
-            return;
-        }
+        const rfcFactorId = getRfcFactorIdByName(selectedRfcFactor);
         // client-side validation
         const result = PollutionSchema.safeParse({
             factor_Name: formData.get('factor_Name'),
-            factor_value: factor_value,
-            passport_id: passport_id
+            factor_value: formData.get('factor_value'),
+            passport_id: formData.get('passport_id'),
+            factor_Ca_value: formData.get('factor_Ca_value'),
+            factor_Ch_value: formData.get('factor_Ch_value'),
+            rfc_factor_id: rfcFactorId
+
         });
         if (!result.success) {
             let errorMessage = '';
@@ -131,24 +150,21 @@ const PollutionLogics = ({ pollutions }: { pollutions: PollutionType[] }) => {
         }
         const id: string = selectedRow.values().next().value;
 
-        //client-side validation
-        const factor_value = Number(formData.get('factor_value'))
-        const passport_id = Number(formData.get('passport_id'));
+        if (selectedRfcFactor === '') {
+            toast.custom((t) => <ErrorToast t={t} message={"Rfc Factor should be selected"} />);
+            return
+        }
+        const rfcFactorId = getRfcFactorIdByName(selectedRfcFactor);
 
-        if (isNaN(factor_value)) {
-            toast.custom((t) => <ErrorToast t={t} message={"amount is not a number"} />);
-            return;
-        }
-        if (isNaN(passport_id)) {
-            toast.custom((t) => <ErrorToast t={t} message={"passport_id is not a number"} />);
-            return;
-        }
-        // client-side validation
+        //client-side validation
         const result = PollutionSchema.safeParse({
             id: Number(id),
             factor_Name: formData.get('factor_Name'),
-            factor_value: factor_value,
-            passport_id: passport_id
+            factor_value: formData.get('factor_value'),
+            passport_id: formData.get('passport_id'),
+            factor_Ca_value: formData.get('factor_Ca_value'),
+            factor_Ch_value: formData.get('factor_Ch_value'),
+            rfc_factor_id: rfcFactorId
         });
         if (!result.success) {
             let errorMessage = '';
@@ -209,14 +225,21 @@ const PollutionLogics = ({ pollutions }: { pollutions: PollutionType[] }) => {
             <div className='flex justify-center'>
                 <form className="max-w-[850px] flex flex-auto  " >
                     <div className='flex flex-col flex-auto gap-5 p-5'>
-                        <CustomInput
-                            title='Substance'
-                            name='factor_Name'
-                            handleChange={handleFormChange}
-                            color='primary'
-                            value={pollutionData.factor_Name}
-                            required={true}
-                        />
+                        <div className=' flex gap-3'>
+                            <CustomInput
+                                title='Substance'
+                                name='factor_Name'
+                                handleChange={handleFormChange}
+                                color='primary'
+                                value={pollutionData.factor_Name}
+                                required={true}
+                            />
+                            <CustomSearchDropdown
+                                items={rfcFactorsNames}
+                                selected={selectedRfcFactor}
+                                setSelected={setSelectedRfcFactor}
+                            />
+                        </div>
                         <div className=' flex gap-3'>
                             <CustomInput
                                 title='Amount'
@@ -232,6 +255,22 @@ const PollutionLogics = ({ pollutions }: { pollutions: PollutionType[] }) => {
                                 handleChange={handleFormChange}
                                 color='primary'
                                 value={pollutionData.passport_id}
+                                required={true}
+                            />
+                            <CustomInput
+                                title='CA'
+                                name='factor_Ca_value'
+                                handleChange={handleFormChange}
+                                color='primary'
+                                value={pollutionData.factor_Ca_value}
+                                required={true}
+                            />
+                            <CustomInput
+                                title='CH'
+                                name='factor_Ch_value'
+                                handleChange={handleFormChange}
+                                color='primary'
+                                value={pollutionData.factor_Ch_value}
                                 required={true}
                             />
                         </div>
@@ -253,10 +292,10 @@ const PollutionLogics = ({ pollutions }: { pollutions: PollutionType[] }) => {
             </div>
 
             <div className="flex justify-center">
-                <div className=" max-w-[950px] flex flex-auto  ">
+                <div className=" max-w-[1050px] flex flex-auto  ">
                     <DynamicTable
                         rowsLength={6}
-                        tableItems={pollutions}
+                        tableItems={pollsWithRfcFactorsNames}
                         tableColumns={columns}
                         selectedRow={selectedRow}
                         setSelectedRow={setSelectedRow}

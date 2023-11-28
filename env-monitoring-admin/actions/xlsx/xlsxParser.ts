@@ -23,11 +23,20 @@ export default async function getDataFromXlsx() {
                     const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as string[][];
                     const headerRow = jsonData[0];
                     const dataRows = jsonData.slice(1);
+                    console.log(dataRows)
 
                     const dataArray = dataRows.map((row: string[]) => {
                         const obj: { [key: string]: any } = {};
                         headerRow.forEach((header: string, index: number) => {
-                            obj[header] = row[index];
+                            if (header === 'factor_Ca_value' || header === 'factor_Ch_value') {
+                                if (typeof row[index] === 'number') {
+                                    const number: number = Number(row[index]);
+                                    obj[header] = parseFloat(number.toFixed(9));
+                                }
+                            }
+                            else {
+                                obj[header] = row[index];
+                            }
                         });
                         return obj;
                     });

@@ -14,7 +14,7 @@ const CustomInput = ({ title = "CustomInput", color, name, handleChange, value, 
 
     return (
         <div
-            className={`flex flex-auto py-2 pl-5 pr-2 rounded-md border-gray-300 border-2 focus-within:border-${color} hover:focus-within:border-${color} relative group`}
+            className={`flex flex-auto py-2 pl-5 pr-2 rounded-md border-gray-300 border-2 focus-within:border-${color} hover:focus-within:border-${color} relative group z-10`}
         >
             <input
                 type='text'

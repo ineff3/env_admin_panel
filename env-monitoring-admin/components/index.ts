@@ -8,6 +8,7 @@ import ErrorToast from "./toasts/ErrorToast";
 import CustomDropdown from "./CustomDropdown";
 import CustomBtn from "./CustomBtn";
 import DynamicSearchTable from "./DynamicSearchTable";
+import CustomSearchDropdown from "./CustomSearchDropdown";
 
 export {
     CustomInput,
@@ -19,5 +20,6 @@ export {
     ErrorToast,
     CustomDropdown,
     CustomBtn,
-    DynamicSearchTable
+    DynamicSearchTable,
+    CustomSearchDropdown
 }

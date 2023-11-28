@@ -77,7 +77,10 @@ export const addPollution = async (newPollution: unknown) => {
             body: JSON.stringify({
                 factor_Name: result.data.factor_Name,
                 factor_value: result.data.factor_value,
-                passport_id: result.data.passport_id
+                passport_id: result.data.passport_id,
+                factor_Ca_value: result.data.factor_Ca_value,
+                factor_Ch_value: result.data.factor_Ch_value,
+                rfc_factor_id: result.data.rfc_factor_id
             }),
             agent
         };
@@ -115,7 +118,10 @@ export const editPollution = async (editedPollution: unknown) => {
                 id: result.data.id,
                 factor_Name: result.data.factor_Name,
                 factor_value: result.data.factor_value,
-                passport_id: result.data.passport_id
+                passport_id: result.data.passport_id,
+                factor_Ca_value: result.data.factor_Ca_value,
+                factor_Ch_value: result.data.factor_Ch_value,
+                rfc_factor_id: result.data.rfc_factor_id
             }),
             agent
         };

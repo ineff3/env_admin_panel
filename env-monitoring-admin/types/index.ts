@@ -88,6 +88,9 @@ export interface PollutionDataType {
     factor_Name: string,
     factor_value: string,
     passport_id: string
+    factor_Ca_value: string
+    factor_Ch_value: string
+    rfc_factor_id: string
 }
 
 export interface PollutionType extends PollutionDataType {
