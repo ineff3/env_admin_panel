@@ -1,6 +1,6 @@
 'use client';
 import { rfcFactorDataType, rfcFactorType } from "@/types"
-import { PassportType, PollutionDataType, PollutionType, TableColumns } from '@/types'
+import { TableColumns } from '@/types'
 import { CustomInput, DynamicTable, SuccessfulToast, ErrorToast, CustomBtn, DynamicSearchTable } from '@/components';
 import { AiOutlinePlus } from 'react-icons/ai'
 import { BsFiletypeXlsx } from 'react-icons/bs'
@@ -11,6 +11,8 @@ import { toast } from 'react-hot-toast';
 import { RfcFactorArraySchema, RfcFactorSchema } from '@/schemas';
 import { MdEditNote } from 'react-icons/md';
 import { addRfcFactor, createRfcFactorsFromXlsx, deleteRfcFactor, editRfcFactor } from "@/actions/rfcFactorsActions";
+import { Select, SelectItem } from "@nextui-org/react";
+import { damagedOrgansArray } from "./damagedOrgansData";
 
 //Keys should be as the passed items properties
 const columns: TableColumns[] = [
@@ -22,6 +24,10 @@ const columns: TableColumns[] = [
         name: 'AMOUNT',
         key: 'factor_value'
     },
+    {
+        name: 'DAMAGED ORGANS',
+        key: 'damaged_organs'
+    }
 ]
 
 const RfcFactorsLogics = ({ rfcFactors }: { rfcFactors: rfcFactorType[] }) => {
@@ -29,6 +35,8 @@ const RfcFactorsLogics = ({ rfcFactors }: { rfcFactors: rfcFactorType[] }) => {
         factor_Name: '',
         factor_value: '',
     })
+    const [damagedOrgans, setDamagedOrgans] = useState(new Set([]));
+
     const [selectedRow, setSelectedRow] = useState<Selection>(new Set());
 
     //Executes whenever selectedRow changes to some actual row
@@ -43,9 +51,14 @@ const RfcFactorsLogics = ({ rfcFactors }: { rfcFactors: rfcFactorType[] }) => {
                     factor_Name: selectedRfcFactor.factor_Name,
                     factor_value: selectedRfcFactor.factor_value,
                 })
+                if (selectedRfcFactor.damaged_organs !== undefined) {
+                    const damagedOrgansArray: any = selectedRfcFactor.damaged_organs?.split(", ")
+                    setDamagedOrgans(new Set(damagedOrgansArray))
+                }
             }
         } else {
             resetFieldState()
+            setDamagedOrgans(new Set([]))
         }
     }, [selectedRow]);
 
@@ -64,6 +77,9 @@ const RfcFactorsLogics = ({ rfcFactors }: { rfcFactors: rfcFactorType[] }) => {
             [e.target.name]: e.target.value
         })
     }
+    const handleDamagedOrgansChange = (e: any) => {
+        setDamagedOrgans(new Set(e.target.value.split(",")));
+    };
 
     const clientAddRfcFactor = async (formData: FormData) => {
         const factor_value = Number(formData.get('factor_value'))
@@ -72,11 +88,13 @@ const RfcFactorsLogics = ({ rfcFactors }: { rfcFactors: rfcFactorType[] }) => {
             toast.custom((t) => <ErrorToast t={t} message={"amount is not a number"} />);
             return;
         }
+        const damagedOragns = Array.from(damagedOrgans).join(", ");
 
         // client-side validation
         const result = RfcFactorSchema.safeParse({
             factor_Name: formData.get('factor_Name'),
             factor_value: factor_value,
+            damaged_organs: damagedOragns
         });
         if (!result.success) {
             let errorMessage = '';
@@ -114,11 +132,14 @@ const RfcFactorsLogics = ({ rfcFactors }: { rfcFactors: rfcFactorType[] }) => {
             return;
         }
 
+        const damagedOragns = Array.from(damagedOrgans).join(", ");
+
         // client-side validation
         const result = RfcFactorSchema.safeParse({
             id: Number(id),
             factor_Name: formData.get('factor_Name'),
             factor_value: factor_value,
+            damaged_organs: damagedOragns
         });
         if (!result.success) {
             let errorMessage = '';
@@ -197,6 +218,33 @@ const RfcFactorsLogics = ({ rfcFactors }: { rfcFactors: rfcFactorType[] }) => {
                             />
 
                         </div>
+                        <div className=" flex justify-center">
+
+                            <Select
+                                size='md'
+                                radius="md"
+                                label="Damaged Organs"
+                                selectionMode="multiple"
+                                placeholder="Select a damaged organ"
+                                selectedKeys={damagedOrgans}
+                                className=" w-1/2 "
+                                onChange={handleDamagedOrgansChange}
+                                classNames={{
+                                    label: "",
+                                    trigger: "bg-white rounded-md border-gray-300 border-2",
+                                    listboxWrapper: "bg-white",
+                                }}
+                            >
+                                {damagedOrgansArray.map((dmgOrgan) => (
+                                    <SelectItem key={dmgOrgan.value} value={dmgOrgan.value}>
+                                        {dmgOrgan.label}
+                                    </SelectItem>
+                                ))}
+                            </Select>
+                        </div>
+                        {/* <p className="text-small text-default-500">Selected: {Array.from(damagedOrgans).join(", ")}</p> */}
+
+
 
                         <div className='flex gap-5 justify-center'>
                             <CustomBtn

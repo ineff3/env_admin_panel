@@ -79,6 +79,7 @@ export const RfcFactorSchema = z.object({
         .min(1, { message: "Pollution name should be at least 1 character long" })
         .max(150, { message: "Pollution name should be at most 150 character long" }),
     factor_value: z.number().positive(),
+    damaged_organs: z.string().trim().min(1, { message: "Damaged organs should be choosed" })
 })
 
 export const RfcFactorArraySchema = z.array(RfcFactorSchema).nonempty({

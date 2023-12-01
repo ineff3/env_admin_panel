@@ -12,7 +12,7 @@ const Pollutions = async () => {
 
     const pollutionsWithRfcFactors = pollutionsArray.map(pollution => ({
         ...pollution,
-        rfc_factor_name: rfcFactors.find((rfcFactor) => rfcFactor.id === pollution.rfc_factor_id).factor_Name
+        rfc_factor_name: rfcFactors.find((rfcFactor) => rfcFactor.id === pollution.rfc_factor_id)?.factor_Name
     }))
 
 

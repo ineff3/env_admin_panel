@@ -77,6 +77,7 @@ export const addRfcFactor = async (newRfcFactor: unknown) => {
             body: JSON.stringify({
                 factor_Name: result.data.factor_Name,
                 factor_value: result.data.factor_value,
+                damaged_organs: result.data.damaged_organs
             }),
             agent
         };
@@ -114,6 +115,7 @@ export const editRfcFactor = async (editedRfcFactor: unknown) => {
                 id: result.data.id,
                 factor_Name: result.data.factor_Name,
                 factor_value: result.data.factor_value,
+                damaged_organs: result.data.damaged_organs
             }),
             agent
         };
