@@ -4,6 +4,7 @@ import https from 'https';
 import { CustomServerResponse } from '@/types';
 import { revalidatePath } from 'next/cache';
 import { PollutionArraySchema, PollutionSchema } from '@/schemas';
+import { API_URL } from './globalVariable';
 
 const agent = new https.Agent({
     rejectUnauthorized: false
@@ -41,7 +42,7 @@ export const getPollutions = async () => {
     };
 
     try {
-        const response = await fetch('https://localhost:7001/api/EnvData', fetchOptions);
+        const response = await fetch(new URL('api/EnvData', API_URL), fetchOptions);
 
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -84,7 +85,7 @@ export const addPollution = async (newPollution: unknown) => {
             }),
             agent
         };
-        const response = await fetch('https://localhost:7001/api/EnvData/CreateEnvFactor', fetchOptions)
+        const response = await fetch(new URL('api/EnvData/CreateEnvFactor', API_URL), fetchOptions)
 
         if (!response.ok) {
             const responseBody = await response.json() as CustomServerResponse;
@@ -126,7 +127,7 @@ export const editPollution = async (editedPollution: unknown) => {
             agent
         };
 
-        const response = await fetch('https://localhost:7001/api/EnvData', fetchOptions)
+        const response = await fetch(new URL('api/EnvData', API_URL), fetchOptions)
 
         if (!response.ok) {
             const responseBody = await response.json() as CustomServerResponse;
@@ -146,7 +147,7 @@ export const deletePollution = async (id: number) => {
             method: 'DELETE',
             agent
         }
-        const response = await fetch(`https://localhost:7001/api/EnvData/id:int?id=${id}`, fetchOptions);
+        const response = await fetch(new URL(`api/EnvData/id:int?id=${id}`, API_URL), fetchOptions);
         if (!response.ok) {
             const responseBody = await response.json() as CustomServerResponse;
             throw new Error(formatServerErrors(responseBody.errorMessages));
@@ -180,7 +181,7 @@ export const createPollutionFromXlsx = async (pollutionArray: unknown) => {
             agent
         };
 
-        const response = await fetch('https://localhost:7001/api/EnvData/CreateEnvFactors', fetchOptions);
+        const response = await fetch(new URL('api/EnvData/CreateEnvFactors', API_URL), fetchOptions);
         if (!response.ok) {
             const responseBody = await response.json() as CustomServerResponse;
             throw new Error(formatServerErrors(responseBody.errorMessages));

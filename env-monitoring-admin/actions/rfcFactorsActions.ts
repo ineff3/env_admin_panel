@@ -4,6 +4,7 @@ import https from 'https';
 import { CustomServerResponse } from '@/types';
 import { revalidatePath } from 'next/cache';
 import { RfcFactorArraySchema, RfcFactorSchema } from '@/schemas';
+import { API_URL } from './globalVariable';
 
 const agent = new https.Agent({
     rejectUnauthorized: false
@@ -41,7 +42,7 @@ export const getRfcFactors = async () => {
     };
 
     try {
-        const response = await fetch('https://localhost:7001/api/RfcData', fetchOptions);
+        const response = await fetch(new URL('api/RfcData', API_URL), fetchOptions);
 
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -81,7 +82,7 @@ export const addRfcFactor = async (newRfcFactor: unknown) => {
             }),
             agent
         };
-        const response = await fetch('https://localhost:7001/api/RfcData', fetchOptions)
+        const response = await fetch(new URL('api/RfcData', API_URL), fetchOptions)
 
         if (!response.ok) {
             const responseBody = await response.json() as CustomServerResponse;
@@ -120,7 +121,7 @@ export const editRfcFactor = async (editedRfcFactor: unknown) => {
             agent
         };
 
-        const response = await fetch('https://localhost:7001/api/RfcData', fetchOptions)
+        const response = await fetch(new URL('api/RfcData', API_URL), fetchOptions)
 
         if (!response.ok) {
             const responseBody = await response.json() as CustomServerResponse;
@@ -140,7 +141,7 @@ export const deleteRfcFactor = async (id: number) => {
             method: 'DELETE',
             agent
         }
-        const response = await fetch(`https://localhost:7001/api/RfcData/id:int?id=${id}`, fetchOptions);
+        const response = await fetch(new URL(`api/RfcData/id:int?id=${id}`, API_URL), fetchOptions);
         if (!response.ok) {
             const responseBody = await response.json() as CustomServerResponse;
             throw new Error(formatServerErrors(responseBody.errorMessages));
@@ -173,7 +174,7 @@ export const createRfcFactorsFromXlsx = async (rfcFactorArray: unknown) => {
             agent
         };
 
-        const response = await fetch('https://localhost:7001/api/RfcData/CreateRfcFactors', fetchOptions);
+        const response = await fetch(new URL('api/RfcData/CreateRfcFactors', API_URL), fetchOptions);
         if (!response.ok) {
             const responseBody = await response.json() as CustomServerResponse;
             throw new Error(formatServerErrors(responseBody.errorMessages));

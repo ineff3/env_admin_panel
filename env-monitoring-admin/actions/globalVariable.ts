@@ -1,0 +1,1 @@
+export const API_URL = 'https://env-monitor-ullzynenoa-lm.a.run.app/';

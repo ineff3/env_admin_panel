@@ -4,6 +4,7 @@ import https from 'https';
 import { CustomServerResponse } from '@/types';
 import { revalidatePath } from 'next/cache';
 import { PassportSchema } from '@/schemas';
+import { API_URL } from './globalVariable';
 
 const agent = new https.Agent({
     rejectUnauthorized: false
@@ -40,7 +41,7 @@ export const getPassports = async () => {
     };
 
     try {
-        const response = await fetch('https://localhost:7001/api/PassportData', fetchOptions);
+        const response = await fetch(new URL('api/PassportData', API_URL), fetchOptions);
 
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -79,7 +80,7 @@ export const addPassport = async (newPassport: unknown) => {
             }),
             agent
         };
-        const response = await fetch('https://localhost:7001/api/PassportData', fetchOptions)
+        const response = await fetch(new URL('api/PassportData', API_URL), fetchOptions)
 
         if (!response.ok) {
             const responseBody = await response.json() as CustomServerResponse;
@@ -117,7 +118,7 @@ export const editPassport = async (editedPassport: unknown) => {
             agent
         };
 
-        const response = await fetch('https://localhost:7001/api/PassportData', fetchOptions)
+        const response = await fetch(new URL('api/PassportData', API_URL), fetchOptions)
 
         if (!response.ok) {
             const responseBody = await response.json() as CustomServerResponse;
@@ -137,7 +138,7 @@ export const deletePassport = async (id: number) => {
             method: 'DELETE',
             agent
         }
-        const response = await fetch(`https://localhost:7001/api/PassportData/id:int?id=${id}`, fetchOptions);
+        const response = await fetch(new URL(`api/PassportData/id:int?id=${id}`, API_URL), fetchOptions);
         if (!response.ok) {
             const responseBody = await response.json() as CustomServerResponse;
             throw new Error(formatServerErrors(responseBody.errorMessages));
