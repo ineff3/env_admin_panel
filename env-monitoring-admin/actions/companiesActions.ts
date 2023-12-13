@@ -5,6 +5,8 @@ import { CustomServerResponse } from '@/types';
 import { revalidatePath } from 'next/cache';
 import { CompanySchema } from '@/schemas';
 import { formatServerErrors, getErrorMessage } from './secondary-utils/errorHandling';
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 
 const agent = new https.Agent({
     rejectUnauthorized: false
@@ -35,6 +37,7 @@ export const getCompanies = async () => {
 };
 
 export const addCompany = async (newCompany: unknown) => {
+    const session = await getServerSession(authOptions)
     try {
         //server-side validation
         const result = CompanySchema.safeParse(newCompany);
@@ -49,7 +52,8 @@ export const addCompany = async (newCompany: unknown) => {
             method: 'POST',
             headers: {
                 'accept': 'text/plain',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `bearer ${session?.user.token}`
             },
             body: JSON.stringify({
                 name: result.data.name,
@@ -72,6 +76,7 @@ export const addCompany = async (newCompany: unknown) => {
 }
 
 export const editCompany = async (editedCompany: unknown) => {
+    const session = await getServerSession(authOptions)
     try {
         //server-side validation
         const result = CompanySchema.safeParse(editedCompany);
@@ -86,7 +91,8 @@ export const editCompany = async (editedCompany: unknown) => {
         const fetchOptions = {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `bearer ${session?.user.token}`
             },
             body: JSON.stringify({
                 id: result.data.id,
@@ -112,9 +118,13 @@ export const editCompany = async (editedCompany: unknown) => {
 }
 
 export const deleteCompany = async (id: number) => {
+    const session = await getServerSession(authOptions)
     try {
         const fetchOptions = {
             method: 'DELETE',
+            headers: {
+                'Authorization': `bearer ${session?.user.token}`
+            },
             agent
         }
         const response = await fetch(new URL(`api/CompanyData/id:int?id=${id}`, API_URL), fetchOptions);
