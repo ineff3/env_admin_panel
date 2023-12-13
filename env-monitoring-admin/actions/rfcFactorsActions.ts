@@ -4,36 +4,12 @@ import https from 'https';
 import { CustomServerResponse } from '@/types';
 import { revalidatePath } from 'next/cache';
 import { RfcFactorArraySchema, RfcFactorSchema } from '@/schemas';
-import { API_URL } from './globalVariable';
+import { formatServerErrors, getErrorMessage } from './secondary-utils/errorHandling';
 
 const agent = new https.Agent({
     rejectUnauthorized: false
 });
-
-const getErrorMessage = (error: unknown): string => {
-    let message: string;
-    if (error instanceof Error) {
-        message = error.message;
-    }
-    else if (error && typeof error === "object" && "message" in error) {
-        message = String(error.message);
-    }
-    else if (typeof error == "string") {
-        message = error;
-    }
-    else {
-        message = "Something went wrong";
-    }
-    return message;
-}
-
-const formatServerErrors = (errorMessages: string[]) => {
-    if (!Array.isArray(errorMessages) || errorMessages.length === 0) {
-        return;
-    }
-
-    return errorMessages.join('. ');
-}
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const getRfcFactors = async () => {
     const fetchOptions = {
