@@ -5,6 +5,8 @@ import { CustomServerResponse } from '@/types';
 import { revalidatePath } from 'next/cache';
 import { PassportSchema } from '@/schemas';
 import { formatServerErrors, getErrorMessage } from './secondary-utils/errorHandling';
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 
 const agent = new https.Agent({
     rejectUnauthorized: false
@@ -34,6 +36,7 @@ export const getPassports = async () => {
 }
 
 export const addPassport = async (newPassport: unknown) => {
+    const session = await getServerSession(authOptions)
     try {
         //server-side validation
         const result = PassportSchema.safeParse(newPassport);
@@ -49,7 +52,8 @@ export const addPassport = async (newPassport: unknown) => {
             method: 'POST',
             headers: {
                 'accept': 'text/plain',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `bearer ${session?.user.token}`
             },
             body: JSON.stringify({
                 company_id: result.data.company_id,
@@ -71,6 +75,7 @@ export const addPassport = async (newPassport: unknown) => {
 }
 
 export const editPassport = async (editedPassport: unknown) => {
+    const session = await getServerSession(authOptions)
     try {
         //server-side validation
         const result = PassportSchema.safeParse(editedPassport);
@@ -85,7 +90,8 @@ export const editPassport = async (editedPassport: unknown) => {
         const fetchOptions = {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `bearer ${session?.user.token}`
             },
             body: JSON.stringify({
                 company_id: result.data.company_id,
@@ -110,9 +116,13 @@ export const editPassport = async (editedPassport: unknown) => {
 }
 
 export const deletePassport = async (id: number) => {
+    const session = await getServerSession(authOptions)
     try {
         const fetchOptions = {
             method: 'DELETE',
+            headers: {
+                'Authorization': `bearer ${session?.user.token}`
+            },
             agent
         }
         const response = await fetch(new URL(`api/PassportData/id:int?id=${id}`, API_URL), fetchOptions);

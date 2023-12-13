@@ -5,6 +5,8 @@ import { CustomServerResponse } from '@/types';
 import { revalidatePath } from 'next/cache';
 import { RfcFactorArraySchema, RfcFactorSchema } from '@/schemas';
 import { formatServerErrors, getErrorMessage } from './secondary-utils/errorHandling';
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 
 const agent = new https.Agent({
     rejectUnauthorized: false
@@ -34,6 +36,7 @@ export const getRfcFactors = async () => {
 };
 
 export const addRfcFactor = async (newRfcFactor: unknown) => {
+    const session = await getServerSession(authOptions)
     try {
         //server-side validation
         const result = RfcFactorSchema.safeParse(newRfcFactor);
@@ -49,7 +52,8 @@ export const addRfcFactor = async (newRfcFactor: unknown) => {
             method: 'POST',
             headers: {
                 'accept': 'text/plain',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `bearer ${session?.user.token}`
             },
             body: JSON.stringify({
                 factor_Name: result.data.factor_Name,
@@ -72,6 +76,7 @@ export const addRfcFactor = async (newRfcFactor: unknown) => {
 }
 
 export const editRfcFactor = async (editedRfcFactor: unknown) => {
+    const session = await getServerSession(authOptions)
     try {
         //server-side validation
         const result = RfcFactorSchema.safeParse(editedRfcFactor);
@@ -86,7 +91,8 @@ export const editRfcFactor = async (editedRfcFactor: unknown) => {
         const fetchOptions = {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `bearer ${session?.user.token}`
             },
             body: JSON.stringify({
                 id: result.data.id,
@@ -112,9 +118,13 @@ export const editRfcFactor = async (editedRfcFactor: unknown) => {
 }
 
 export const deleteRfcFactor = async (id: number) => {
+    const session = await getServerSession(authOptions)
     try {
         const fetchOptions = {
             method: 'DELETE',
+            headers: {
+                'Authorization': `bearer ${session?.user.token}`
+            },
             agent
         }
         const response = await fetch(new URL(`api/RfcData/id:int?id=${id}`, API_URL), fetchOptions);
@@ -130,6 +140,7 @@ export const deleteRfcFactor = async (id: number) => {
 }
 
 export const createRfcFactorsFromXlsx = async (rfcFactorArray: unknown) => {
+    const session = await getServerSession(authOptions)
     try {
         // server-side validation
         const result = RfcFactorArraySchema.safeParse(rfcFactorArray)
@@ -144,7 +155,8 @@ export const createRfcFactorsFromXlsx = async (rfcFactorArray: unknown) => {
             method: 'POST',
             headers: {
                 'accept': 'text/plain',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `bearer ${session?.user.token}`
             },
             body: JSON.stringify(result.data),
             agent
