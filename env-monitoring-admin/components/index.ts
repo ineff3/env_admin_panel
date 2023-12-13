@@ -9,6 +9,7 @@ import CustomDropdown from "./CustomDropdown";
 import CustomBtn from "./CustomBtn";
 import DynamicSearchTable from "./DynamicSearchTable";
 import CustomSearchDropdown from "./CustomSearchDropdown";
+import CustomUncontrolledInput from "./CustomUncontrolledInput";
 
 export {
     CustomInput,
@@ -21,5 +22,6 @@ export {
     CustomDropdown,
     CustomBtn,
     DynamicSearchTable,
-    CustomSearchDropdown
+    CustomSearchDropdown,
+    CustomUncontrolledInput
 }
