@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link'
 import { RxDashboard } from 'react-icons/rx'
-import { PiFactory, PiNewspaperClipping, PiTrash, PiGear } from 'react-icons/pi'
+import { PiFactory, PiNewspaperClipping, PiTrash, PiGear, PiUser } from 'react-icons/pi'
 import { usePathname } from 'next/navigation'
 import { NavbarProps } from '@/types';
 import { MdCloudQueue } from "react-icons/md";
@@ -53,6 +53,12 @@ const Navbar = ({ handleNav }: NavbarProps) => {
                 <Link className={pathname === '/rfc-factors' ? activeLinkStyles : inactiveLinkStyles + inactiveHoverStyles} href={'/rfc-factors'}>
                     <MdCloudQueue size={25} />
                     RFC Factors
+                </Link>
+            </nav>
+            <nav >
+                <Link className={pathname === '/users' ? activeLinkStyles : inactiveLinkStyles + inactiveHoverStyles} href={'/users'}>
+                    <PiUser size={25} />
+                    Users
                 </Link>
             </nav>
         </aside>

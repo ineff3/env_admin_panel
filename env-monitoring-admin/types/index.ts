@@ -9,6 +9,7 @@ export interface CustomInputProps {
     handleChange: ChangeEventHandler<HTMLInputElement>;
     value?: string;
     required?: boolean;
+    disabled?: boolean
 }
 export interface CustomTextAreaProps {
     title: string;
@@ -105,4 +106,14 @@ export interface rfcFactorDataType {
 
 export interface rfcFactorType extends rfcFactorDataType {
     id: number
+}
+
+export interface UserDataType {
+    userName: string
+    email: string
+    role: string
+}
+
+export interface UserType extends UserDataType {
+    id: string
 }
