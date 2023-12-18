@@ -64,6 +64,32 @@ export const getUserRoles = async () => {
     }
 }
 
+export const editUserRoles = async (userRoles: string[], userId: string) => {
+    const session = await getServerSession(authOptions)
+    try {
+        const fetchOptions = {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `bearer ${session?.user.token}`
+            },
+            body: JSON.stringify(userRoles),
+            agent
+        };
+
+        const response = await fetch(new URL(`api/UserData?id=${userId}`, API_URL), fetchOptions)
+
+        if (!response.ok) {
+            const responseBody = await response.json() as CustomServerResponse;
+            throw new Error(formatServerErrors(responseBody.errorMessages));
+        }
+    }
+    catch (error) {
+        return { error: getErrorMessage(error) }
+    }
+    revalidatePath('/users')
+}
+
 export const deleteUser = async (id: string) => {
     const session = await getServerSession(authOptions)
     try {

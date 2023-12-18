@@ -6,7 +6,7 @@ import { AiOutlinePlus } from 'react-icons/ai'
 import { MdEditNote } from 'react-icons/md'
 import { Selection } from "@nextui-org/react";
 import { toast } from 'react-hot-toast';
-import { deleteUser } from "@/actions/usersActions";
+import { deleteUser, editUserRoles } from "@/actions/usersActions";
 import DynamicUserTable from "./DynamicUserTable";
 import { Select, SelectItem } from "@nextui-org/react";
 
@@ -91,6 +91,21 @@ const UsersLogics = ({ users, userRoles }: { users: UserType[], userRoles: UserR
     function resetRow() {
         setSelectedRow(new Set());
     }
+    const clientEditUserRoles = async () => {
+        if (typeof selectedRow === 'string' || selectedRow.size === 0) {
+            toast.custom((t) => <ErrorToast t={t} message={"Row is not selected"} />);
+            return;
+        }
+        const id: string = selectedRow.values().next().value;
+
+        //server response + error handling
+        const response = await editUserRoles(Array.from(selectedRoles), id)
+        if (response?.error) {
+            toast.custom((t) => <ErrorToast t={t} message={response.error} />);
+        } else {
+            toast.custom((t) => <SuccessfulToast t={t} message='User role edited successfully!' />, { duration: 2500 })
+        }
+    }
     const clientDeleteUser = async (id: string) => {
         const response = await deleteUser(id);
         if (response?.error) {
@@ -151,13 +166,13 @@ const UsersLogics = ({ users, userRoles }: { users: UserType[], userRoles: UserR
                                 ))}
                             </Select>
                         </div>
-                        {/* <div className='flex gap-5 justify-center'>
+                        <div className='flex gap-5 justify-center'>
                             <CustomBtn
-                                title="Edit RFC factor"
+                                title="Edit User Role"
                                 icon={<MdEditNote size={30} />}
-                                formActionFunction={clientEditRfcFactor}
+                                formActionFunction={clientEditUserRoles}
                             />
-                        </div> */}
+                        </div>
                     </div>
                 </form>
             </div>
