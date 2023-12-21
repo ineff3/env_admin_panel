@@ -23,15 +23,15 @@ export const PassportSchema = z.object({
     source_operating_time: z.string().refine((value) => {
         const numericValue = Number(value);
         return !isNaN(numericValue) && numericValue > 0;
-    }, { message: "OPerating time should be positive" }),
+    }, { message: "Operating time should be positive" }),
 })
 
 export const PollutionSchema = z.object({
     id: z.number().positive().int().optional(),
-    factor_Name: z.string().trim()
+    name: z.string().trim()
         .min(1, { message: "Pollution name should be at least 1 character long" })
         .max(150, { message: "Pollution name should be at most 150 character long" }),
-    factor_value: z.string().refine((value) => {
+    value: z.string().refine((value) => {
         const numericValue = Number(value);
         return !isNaN(numericValue) && numericValue > 0;
     }, { message: "Amount value must be a positive number" }),
@@ -41,7 +41,7 @@ export const PollutionSchema = z.object({
         return Number.isInteger(numericValue) && numericValue > 0;
     }, { message: "Passport ID must be a positive integer" }),
 
-    factor_Ca_value: z.string().refine((value) => {
+    cA_value: z.string().refine((value) => {
         if (value === '') {
             return 0;
         }
@@ -49,14 +49,14 @@ export const PollutionSchema = z.object({
         return !isNaN(numericValue) && numericValue > 0;
     }, { message: "CA value must be a positive number" }),
 
-    factor_Ch_value: z.string().refine((value) => {
+    cH_value: z.string().refine((value) => {
         if (value === '') {
             return 0;
         }
         const numericValue = Number(value);
         return !isNaN(numericValue) && numericValue > 0;
     }, { message: "CH Value must be a positive number" }),
-    rfc_factor_id: z.number().positive().int(),
+    pollutant_id: z.number().positive().int(),
 
 })
 

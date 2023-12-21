@@ -87,12 +87,12 @@ export interface PassportType extends PassportDataType {
 }
 
 export interface PollutionDataType {
-    factor_Name: string,
-    factor_value: string,
+    name: string,
+    value: string,
     passport_id: string
-    factor_Ca_value: string
-    factor_Ch_value: string
-    rfc_factor_id: string
+    cA_value: string
+    cH_value: string
+    pollutant_id: string
 }
 
 export interface PollutionType extends PollutionDataType {
@@ -100,7 +100,7 @@ export interface PollutionType extends PollutionDataType {
 }
 
 export interface rfcFactorDataType {
-    factor_Name: string,
+    name: string,
     factor_value: string,
     damaged_organs?: string
 }

@@ -18,7 +18,7 @@ import { damagedOrgansArray } from "./damagedOrgansData";
 const columns: TableColumns[] = [
     {
         name: 'SUBSTANCE',
-        key: 'factor_Name'
+        key: 'name'
     },
     {
         name: 'AMOUNT',
@@ -32,7 +32,7 @@ const columns: TableColumns[] = [
 
 const RfcFactorsLogics = ({ rfcFactors }: { rfcFactors: rfcFactorType[] }) => {
     const [rfcFactorData, setRfcFactorData] = useState<rfcFactorDataType>({
-        factor_Name: '',
+        name: '',
         factor_value: '',
     })
     const [damagedOrgans, setDamagedOrgans] = useState(new Set([]));
@@ -48,7 +48,7 @@ const RfcFactorsLogics = ({ rfcFactors }: { rfcFactors: rfcFactorType[] }) => {
 
             if (selectedRfcFactor !== undefined) {
                 setRfcFactorData({
-                    factor_Name: selectedRfcFactor.factor_Name,
+                    name: selectedRfcFactor.name,
                     factor_value: selectedRfcFactor.factor_value,
                 })
                 if (selectedRfcFactor.damaged_organs !== undefined) {
@@ -64,7 +64,7 @@ const RfcFactorsLogics = ({ rfcFactors }: { rfcFactors: rfcFactorType[] }) => {
 
     function resetFieldState() {
         setRfcFactorData({
-            factor_Name: '',
+            name: '',
             factor_value: '',
         });
     }
@@ -92,7 +92,7 @@ const RfcFactorsLogics = ({ rfcFactors }: { rfcFactors: rfcFactorType[] }) => {
 
         // client-side validation
         const result = RfcFactorSchema.safeParse({
-            factor_Name: formData.get('factor_Name'),
+            name: formData.get('name'),
             factor_value: factor_value,
             damaged_organs: damagedOragns
         });
@@ -137,7 +137,7 @@ const RfcFactorsLogics = ({ rfcFactors }: { rfcFactors: rfcFactorType[] }) => {
         // client-side validation
         const result = RfcFactorSchema.safeParse({
             id: Number(id),
-            factor_Name: formData.get('factor_Name'),
+            name: formData.get('name'),
             factor_value: factor_value,
             damaged_organs: damagedOragns
         });
@@ -202,10 +202,10 @@ const RfcFactorsLogics = ({ rfcFactors }: { rfcFactors: rfcFactorType[] }) => {
                         <div className=' flex gap-3'>
                             <CustomInput
                                 title='Substance'
-                                name='factor_Name'
+                                name='name'
                                 handleChange={handleFormChange}
                                 color='primary'
-                                value={rfcFactorData.factor_Name}
+                                value={rfcFactorData.name}
                                 required={true}
                             />
                             <CustomInput

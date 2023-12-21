@@ -20,7 +20,7 @@ export const getRfcFactors = async () => {
     };
 
     try {
-        const response = await fetch(new URL('api/RfcData', API_URL), fetchOptions);
+        const response = await fetch(new URL('api/PollutantData', API_URL), fetchOptions);
 
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);

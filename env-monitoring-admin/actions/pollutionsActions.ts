@@ -20,7 +20,7 @@ export const getPollutions = async () => {
     };
 
     try {
-        const response = await fetch(new URL('api/EnvData', API_URL), fetchOptions);
+        const response = await fetch(new URL('api/PollutionData', API_URL), fetchOptions);
 
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -56,16 +56,16 @@ export const addPollution = async (newPollution: unknown) => {
                 'Authorization': `bearer ${session?.user.token}`
             },
             body: JSON.stringify({
-                factor_Name: result.data.factor_Name,
-                factor_value: result.data.factor_value,
+                name: result.data.name,
+                value: result.data.value,
                 passport_id: result.data.passport_id,
-                factor_Ca_value: result.data.factor_Ca_value,
-                factor_Ch_value: result.data.factor_Ch_value,
-                rfc_factor_id: result.data.rfc_factor_id
+                cA_value: result.data.cA_value,
+                cH_value: result.data.cH_value,
+                pollutant_id: result.data.pollutant_id
             }),
             agent
         };
-        const response = await fetch(new URL('api/EnvData/CreateEnvFactor', API_URL), fetchOptions)
+        const response = await fetch(new URL('api/PollutionData/CreatePollution', API_URL), fetchOptions)
 
         if (!response.ok) {
             const responseBody = await response.json() as CustomServerResponse;
@@ -99,17 +99,17 @@ export const editPollution = async (editedPollution: unknown) => {
             },
             body: JSON.stringify({
                 id: result.data.id,
-                factor_Name: result.data.factor_Name,
-                factor_value: result.data.factor_value,
+                name: result.data.name,
+                value: result.data.value,
                 passport_id: result.data.passport_id,
-                factor_Ca_value: result.data.factor_Ca_value,
-                factor_Ch_value: result.data.factor_Ch_value,
-                rfc_factor_id: result.data.rfc_factor_id
+                cA_value: result.data.cA_value,
+                cH_value: result.data.cH_value,
+                pollutant_id: result.data.pollutant_id
             }),
             agent
         };
 
-        const response = await fetch(new URL('api/EnvData', API_URL), fetchOptions)
+        const response = await fetch(new URL('api/PollutionData', API_URL), fetchOptions)
 
         if (!response.ok) {
             const responseBody = await response.json() as CustomServerResponse;
@@ -133,7 +133,7 @@ export const deletePollution = async (id: number) => {
             },
             agent
         }
-        const response = await fetch(new URL(`api/EnvData/id:int?id=${id}`, API_URL), fetchOptions);
+        const response = await fetch(new URL(`api/PollutionData/id:int?id=${id}`, API_URL), fetchOptions);
         if (!response.ok) {
             const responseBody = await response.json() as CustomServerResponse;
             throw new Error(formatServerErrors(responseBody.errorMessages));
@@ -168,7 +168,7 @@ export const createPollutionFromXlsx = async (pollutionArray: unknown) => {
             agent
         };
 
-        const response = await fetch(new URL('api/EnvData/CreateEnvFactors', API_URL), fetchOptions);
+        const response = await fetch(new URL('api/PollutionData/CreatePollutions', API_URL), fetchOptions);
         if (!response.ok) {
             const responseBody = await response.json() as CustomServerResponse;
             throw new Error(formatServerErrors(responseBody.errorMessages));

@@ -15,11 +15,11 @@ import { MdEditNote } from 'react-icons/md';
 const columns: TableColumns[] = [
     {
         name: 'SUBSTANCE',
-        key: 'factor_Name'
+        key: 'name'
     },
     {
         name: 'AMOUNT',
-        key: 'factor_value'
+        key: 'value'
     },
     {
         name: 'PASSPORT',
@@ -27,27 +27,27 @@ const columns: TableColumns[] = [
     },
     {
         name: 'CA',
-        key: 'factor_Ca_value'
+        key: 'cA_value'
     },
     {
         name: 'CH',
-        key: 'factor_Ch_value'
+        key: 'cH_value'
     },
     {
         name: 'RFC',
-        key: 'rfc_factor_name'
+        key: 'pollutant_name'
 
     }
 ]
 
 const PollutionLogics = ({ pollutions, pollsWithRfcFactorsNames, rfcFactorsNames, rfcFactors }: { pollutions: PollutionType[], pollsWithRfcFactorsNames: any, rfcFactorsNames: string[], rfcFactors: rfcFactorType[] }) => {
     const [pollutionData, setPollutionData] = useState<PollutionDataType>({
-        factor_Name: '',
-        factor_value: '',
+        name: '',
+        value: '',
         passport_id: '',
-        factor_Ca_value: '',
-        factor_Ch_value: '',
-        rfc_factor_id: '',
+        cA_value: '',
+        cH_value: '',
+        pollutant_id: '',
     })
     const [selectedRfcFactor, setSelectedRfcFactor] = useState('')
     const [selectedRow, setSelectedRow] = useState<Selection>(new Set());
@@ -60,15 +60,15 @@ const PollutionLogics = ({ pollutions, pollsWithRfcFactorsNames, rfcFactorsNames
             const selectedPollution = pollutions.find(pollution => pollution.id === +id);
 
             if (selectedPollution !== undefined) {
-                const companyName = getRfcFactorNameById(Number(selectedPollution.rfc_factor_id))
+                const companyName = getRfcFactorNameById(Number(selectedPollution.pollutant_id))
                 setSelectedRfcFactor(companyName || '')
                 setPollutionData({
-                    factor_Name: selectedPollution.factor_Name,
-                    factor_value: selectedPollution.factor_value,
+                    name: selectedPollution.name,
+                    value: selectedPollution.value,
                     passport_id: selectedPollution.passport_id,
-                    factor_Ca_value: selectedPollution.factor_Ca_value,
-                    factor_Ch_value: selectedPollution.factor_Ch_value,
-                    rfc_factor_id: selectedPollution.rfc_factor_id
+                    cA_value: selectedPollution.cA_value,
+                    cH_value: selectedPollution.cH_value,
+                    pollutant_id: selectedPollution.pollutant_id
                 })
 
             }
@@ -79,12 +79,12 @@ const PollutionLogics = ({ pollutions, pollsWithRfcFactorsNames, rfcFactorsNames
 
     function resetFieldState() {
         setPollutionData({
-            factor_Name: '',
-            factor_value: '',
+            name: '',
+            value: '',
             passport_id: '',
-            factor_Ca_value: '',
-            factor_Ch_value: '',
-            rfc_factor_id: ''
+            cA_value: '',
+            cH_value: '',
+            pollutant_id: ''
         });
         setSelectedRfcFactor('')
     }
@@ -100,10 +100,10 @@ const PollutionLogics = ({ pollutions, pollsWithRfcFactorsNames, rfcFactorsNames
     }
 
     function getRfcFactorIdByName(rfcFactorName: string) {
-        return rfcFactors.find(rfcFactor => rfcFactor.factor_Name === rfcFactorName)?.id;
+        return rfcFactors.find(rfcFactor => rfcFactor.name === rfcFactorName)?.id;
     }
     function getRfcFactorNameById(rfcFactorId: number) {
-        return rfcFactors.find(rfcFactor => rfcFactor.id === rfcFactorId)?.factor_Name;
+        return rfcFactors.find(rfcFactor => rfcFactor.id === rfcFactorId)?.name;
     }
 
     const clientAddPollution = async (formData: FormData) => {
@@ -114,12 +114,12 @@ const PollutionLogics = ({ pollutions, pollsWithRfcFactorsNames, rfcFactorsNames
         const rfcFactorId = getRfcFactorIdByName(selectedRfcFactor);
         // client-side validation
         const result = PollutionSchema.safeParse({
-            factor_Name: formData.get('factor_Name'),
-            factor_value: formData.get('factor_value'),
+            name: formData.get('name'),
+            value: formData.get('value'),
             passport_id: formData.get('passport_id'),
-            factor_Ca_value: formData.get('factor_Ca_value'),
-            factor_Ch_value: formData.get('factor_Ch_value'),
-            rfc_factor_id: rfcFactorId
+            cA_value: formData.get('cA_value'),
+            cH_value: formData.get('cH_value'),
+            pollutant_id: rfcFactorId
 
         });
         if (!result.success) {
@@ -159,12 +159,12 @@ const PollutionLogics = ({ pollutions, pollsWithRfcFactorsNames, rfcFactorsNames
         //client-side validation
         const result = PollutionSchema.safeParse({
             id: Number(id),
-            factor_Name: formData.get('factor_Name'),
-            factor_value: formData.get('factor_value'),
+            name: formData.get('name'),
+            value: formData.get('value'),
             passport_id: formData.get('passport_id'),
-            factor_Ca_value: formData.get('factor_Ca_value'),
-            factor_Ch_value: formData.get('factor_Ch_value'),
-            rfc_factor_id: rfcFactorId
+            cA_value: formData.get('cA_value'),
+            cH_value: formData.get('cH_value'),
+            pollutant_id: rfcFactorId
         });
         if (!result.success) {
             let errorMessage = '';
@@ -228,10 +228,10 @@ const PollutionLogics = ({ pollutions, pollsWithRfcFactorsNames, rfcFactorsNames
                         <div className=' flex gap-3'>
                             <CustomInput
                                 title='Substance'
-                                name='factor_Name'
+                                name='name'
                                 handleChange={handleFormChange}
                                 color='primary'
-                                value={pollutionData.factor_Name}
+                                value={pollutionData.name}
                                 required={true}
                             />
                             <CustomSearchDropdown
@@ -243,10 +243,10 @@ const PollutionLogics = ({ pollutions, pollsWithRfcFactorsNames, rfcFactorsNames
                         <div className=' flex gap-3'>
                             <CustomInput
                                 title='Amount'
-                                name='factor_value'
+                                name='value'
                                 handleChange={handleFormChange}
                                 color='primary'
-                                value={pollutionData.factor_value}
+                                value={pollutionData.value}
                                 required={true}
                             />
                             <CustomInput
@@ -259,18 +259,18 @@ const PollutionLogics = ({ pollutions, pollsWithRfcFactorsNames, rfcFactorsNames
                             />
                             <CustomInput
                                 title='CA'
-                                name='factor_Ca_value'
+                                name='cA_value'
                                 handleChange={handleFormChange}
                                 color='primary'
-                                value={pollutionData.factor_Ca_value}
+                                value={pollutionData.cA_value}
                                 required={true}
                             />
                             <CustomInput
                                 title='CH'
-                                name='factor_Ch_value'
+                                name='cH_value'
                                 handleChange={handleFormChange}
                                 color='primary'
-                                value={pollutionData.factor_Ch_value}
+                                value={pollutionData.cH_value}
                                 required={true}
                             />
                         </div>
