@@ -58,6 +58,7 @@ export const addPassport = async (newPassport: unknown) => {
             body: JSON.stringify({
                 company_id: result.data.company_id,
                 year: result.data.year,
+                source_operating_time: result.data.source_operating_time
             }),
             agent
         };
@@ -96,7 +97,8 @@ export const editPassport = async (editedPassport: unknown) => {
             body: JSON.stringify({
                 company_id: result.data.company_id,
                 year: result.data.year,
-                id: result.data.id
+                id: result.data.id,
+                source_operating_time: result.data.source_operating_time
             }),
             agent
         };

@@ -79,6 +79,7 @@ export type CompanyNamesArrayType = Array<{ name: string }>
 export interface PassportDataType {
     company_id: string,
     year: string
+    source_operating_time: string
 }
 
 export interface PassportType extends PassportDataType {

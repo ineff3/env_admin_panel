@@ -16,10 +16,14 @@ export const CompanyArraySchema = z.array(CompanySchema).nonempty({
 export const PassportSchema = z.object({
     id: z.number().positive().int().optional(),
     company_id: z.number().positive().int(),
-    year: z.number().positive().int().refine(
-        (val) => val >= 2000 && val <= 2030,
-        "Year must be in range of 2000 to 2030"
-    )
+    year: z.string().refine((value) => {
+        const numericValue = Number(value);
+        return !isNaN(numericValue) && numericValue > 2000 && numericValue < 2030;
+    }, { message: "Year should be between 2000 and 2030" }),
+    source_operating_time: z.string().refine((value) => {
+        const numericValue = Number(value);
+        return !isNaN(numericValue) && numericValue > 0;
+    }, { message: "OPerating time should be positive" }),
 })
 
 export const PollutionSchema = z.object({

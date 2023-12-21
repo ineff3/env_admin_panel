@@ -23,6 +23,10 @@ const columns: TableColumns[] = [
         name: 'YEAR',
         key: 'year'
     },
+    {
+        name: 'OPERATING TIME',
+        key: 'source_operating_time'
+    }
 ]
 
 const PassportLogics = ({ companyNamesArray, passports, companies, passportsToShow }: {
@@ -30,7 +34,8 @@ const PassportLogics = ({ companyNamesArray, passports, companies, passportsToSh
 }) => {
     const [passportData, setPassportData] = useState<PassportDataType>({
         company_id: '',
-        year: ''
+        year: '',
+        source_operating_time: ''
     })
     const [selectedRow, setSelectedRow] = useState<Selection>(new Set());
 
@@ -45,7 +50,8 @@ const PassportLogics = ({ companyNamesArray, passports, companies, passportsToSh
                 const companyName = getCompanyNameById(Number(selectedPassport.company_id))
                 setPassportData({
                     company_id: companyName as string,
-                    year: selectedPassport.year
+                    year: selectedPassport.year,
+                    source_operating_time: selectedPassport.source_operating_time
                 })
             }
         } else {
@@ -63,7 +69,8 @@ const PassportLogics = ({ companyNamesArray, passports, companies, passportsToSh
     function resetFieldState() {
         setPassportData({
             company_id: '',
-            year: ''
+            year: '',
+            source_operating_time: ''
         });
     }
     function resetRow() {
@@ -78,20 +85,11 @@ const PassportLogics = ({ companyNamesArray, passports, companies, passportsToSh
 
     const clientAddPassport = async (formData: FormData) => {
         const company_id = getCompanyIdByName(String(formData.get('company_id')));
-        const year = Number(formData.get('year'));
-
-        if (company_id === undefined || isNaN(company_id)) {
-            toast.custom((t) => <ErrorToast t={t} message={"copany_id is not a number"} />);
-            return;
-        }
-        if (isNaN(year)) {
-            toast.custom((t) => <ErrorToast t={t} message={"year is not a number"} />);
-            return;
-        }
         // client-side validation
         const result = PassportSchema.safeParse({
             company_id: company_id,
-            year: year
+            year: formData.get('year'),
+            source_operating_time: formData.get('source_operating_time')
         });
         if (!result.success) {
             let errorMessage = '';
@@ -120,24 +118,13 @@ const PassportLogics = ({ companyNamesArray, passports, companies, passportsToSh
             return;
         }
         const id: string = selectedRow.values().next().value;
-
         const company_id = getCompanyIdByName(String(formData.get('company_id')));
-        const year = Number(formData.get('year'));
-
-        if (company_id === undefined || isNaN(company_id)) {
-            toast.custom((t) => <ErrorToast t={t} message={"copany_id is not a number"} />);
-            return;
-        }
-        if (isNaN(year)) {
-            toast.custom((t) => <ErrorToast t={t} message={"year is not a number"} />);
-            return;
-        }
-
         //client-side validation
         const result = PassportSchema.safeParse({
             id: Number(id),
             company_id: company_id,
-            year: year
+            year: formData.get('year'),
+            source_operating_time: formData.get('source_operating_time')
         });
         if (!result.success) {
             let errorMessage = '';
@@ -190,6 +177,14 @@ const PassportLogics = ({ companyNamesArray, passports, companies, passportsToSh
                                 handleChange={handleFormChange}
                                 color='primary'
                                 value={passportData.year}
+                                required={true}
+                            />
+                            <CustomInput
+                                title='Operating time'
+                                name='source_operating_time'
+                                handleChange={handleFormChange}
+                                color='primary'
+                                value={passportData.source_operating_time}
                                 required={true}
                             />
                         </div>
