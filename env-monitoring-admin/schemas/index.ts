@@ -1,5 +1,12 @@
 import { z } from 'zod';
 
+const PositiveNumber = (factorName: string) => {
+    return z.string().refine((value) => {
+        const numericValue = Number(value);
+        return !isNaN(numericValue) && numericValue > 0;
+    }, { message: `${factorName} value must be a positive number` });
+}
+
 export const CompanySchema = z.object({
     id: z.number().positive().int().optional(),
     name: z.string().trim()
@@ -79,10 +86,13 @@ export const PollutionArraySchema = z.array(PollutionExcelSchema).nonempty({
 
 export const RfcFactorSchema = z.object({
     id: z.number().positive().int().optional(),
-    factor_Name: z.string().trim()
+    name: z.string().trim()
         .min(1, { message: "Pollution name should be at least 1 character long" })
         .max(150, { message: "Pollution name should be at most 150 character long" }),
-    factor_value: z.number().positive(),
+    rfC_value: PositiveNumber('RFC'),
+    sF_value: PositiveNumber('SF'),
+    gdK_value: PositiveNumber('GDK'),
+    mass_flow_rate: PositiveNumber('MFR'),
     damaged_organs: z.string().trim().min(1, { message: "Damaged organs should be choosed" })
 })
 

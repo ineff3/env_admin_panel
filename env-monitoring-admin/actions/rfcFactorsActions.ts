@@ -56,13 +56,16 @@ export const addRfcFactor = async (newRfcFactor: unknown) => {
                 'Authorization': `bearer ${session?.user.token}`
             },
             body: JSON.stringify({
-                factor_Name: result.data.factor_Name,
-                factor_value: result.data.factor_value,
-                damaged_organs: result.data.damaged_organs
+                name: result.data.name,
+                rfC_value: result.data.rfC_value,
+                damaged_organs: result.data.damaged_organs,
+                sF_value: result.data.sF_value,
+                gdK_value: result.data.gdK_value,
+                mass_flow_rate: result.data.mass_flow_rate,
             }),
             agent
         };
-        const response = await fetch(new URL('api/RfcData', API_URL), fetchOptions)
+        const response = await fetch(new URL('api/PollutantData', API_URL), fetchOptions)
 
         if (!response.ok) {
             const responseBody = await response.json() as CustomServerResponse;
@@ -96,14 +99,17 @@ export const editRfcFactor = async (editedRfcFactor: unknown) => {
             },
             body: JSON.stringify({
                 id: result.data.id,
-                factor_Name: result.data.factor_Name,
-                factor_value: result.data.factor_value,
-                damaged_organs: result.data.damaged_organs
+                name: result.data.name,
+                rfC_value: result.data.rfC_value,
+                damaged_organs: result.data.damaged_organs,
+                sF_value: result.data.sF_value,
+                gdK_value: result.data.gdK_value,
+                mass_flow_rate: result.data.mass_flow_rate,
             }),
             agent
         };
 
-        const response = await fetch(new URL('api/RfcData', API_URL), fetchOptions)
+        const response = await fetch(new URL('api/PollutantData', API_URL), fetchOptions)
 
         if (!response.ok) {
             const responseBody = await response.json() as CustomServerResponse;
@@ -127,7 +133,7 @@ export const deleteRfcFactor = async (id: number) => {
             },
             agent
         }
-        const response = await fetch(new URL(`api/RfcData/id:int?id=${id}`, API_URL), fetchOptions);
+        const response = await fetch(new URL(`api/PollutantData/id:int?id=${id}`, API_URL), fetchOptions);
         if (!response.ok) {
             const responseBody = await response.json() as CustomServerResponse;
             throw new Error(formatServerErrors(responseBody.errorMessages));
@@ -162,7 +168,7 @@ export const createRfcFactorsFromXlsx = async (rfcFactorArray: unknown) => {
             agent
         };
 
-        const response = await fetch(new URL('api/RfcData/CreateRfcFactors', API_URL), fetchOptions);
+        const response = await fetch(new URL('api/PollutantData/CreatePollutants', API_URL), fetchOptions);
         if (!response.ok) {
             const responseBody = await response.json() as CustomServerResponse;
             throw new Error(formatServerErrors(responseBody.errorMessages));

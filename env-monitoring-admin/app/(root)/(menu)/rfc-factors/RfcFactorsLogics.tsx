@@ -22,18 +22,33 @@ const columns: TableColumns[] = [
     },
     {
         name: 'AMOUNT',
-        key: 'factor_value'
+        key: 'rfC_value'
     },
     {
         name: 'DAMAGED ORGANS',
         key: 'damaged_organs'
+    },
+    {
+        name: 'SF',
+        key: 'sF_value'
+    },
+    {
+        name: 'GDK',
+        key: 'gdK_value'
+    },
+    {
+        name: 'MFR',
+        key: 'mass_flow_rate'
     }
 ]
 
 const RfcFactorsLogics = ({ rfcFactors }: { rfcFactors: rfcFactorType[] }) => {
     const [rfcFactorData, setRfcFactorData] = useState<rfcFactorDataType>({
         name: '',
-        factor_value: '',
+        rfC_value: '',
+        sF_value: '',
+        gdK_value: '',
+        mass_flow_rate: ''
     })
     const [damagedOrgans, setDamagedOrgans] = useState(new Set([]));
 
@@ -49,7 +64,10 @@ const RfcFactorsLogics = ({ rfcFactors }: { rfcFactors: rfcFactorType[] }) => {
             if (selectedRfcFactor !== undefined) {
                 setRfcFactorData({
                     name: selectedRfcFactor.name,
-                    factor_value: selectedRfcFactor.factor_value,
+                    rfC_value: selectedRfcFactor.rfC_value,
+                    sF_value: selectedRfcFactor.sF_value,
+                    gdK_value: selectedRfcFactor.gdK_value,
+                    mass_flow_rate: selectedRfcFactor.mass_flow_rate
                 })
                 if (selectedRfcFactor.damaged_organs !== undefined) {
                     const damagedOrgansArray: any = selectedRfcFactor.damaged_organs?.split(", ")
@@ -65,7 +83,10 @@ const RfcFactorsLogics = ({ rfcFactors }: { rfcFactors: rfcFactorType[] }) => {
     function resetFieldState() {
         setRfcFactorData({
             name: '',
-            factor_value: '',
+            rfC_value: '',
+            sF_value: '',
+            gdK_value: '',
+            mass_flow_rate: ''
         });
     }
     function resetRow() {
@@ -82,18 +103,15 @@ const RfcFactorsLogics = ({ rfcFactors }: { rfcFactors: rfcFactorType[] }) => {
     };
 
     const clientAddRfcFactor = async (formData: FormData) => {
-        const factor_value = Number(formData.get('factor_value'))
-
-        if (isNaN(factor_value)) {
-            toast.custom((t) => <ErrorToast t={t} message={"amount is not a number"} />);
-            return;
-        }
         const damagedOragns = Array.from(damagedOrgans).join(", ");
 
         // client-side validation
         const result = RfcFactorSchema.safeParse({
             name: formData.get('name'),
-            factor_value: factor_value,
+            rfC_value: formData.get('rfC_value'),
+            sF_value: formData.get('sF_value'),
+            gdK_value: formData.get('gdK_value'),
+            mass_flow_rate: formData.get('mass_flow_rate'),
             damaged_organs: damagedOragns
         });
         if (!result.success) {
@@ -125,20 +143,16 @@ const RfcFactorsLogics = ({ rfcFactors }: { rfcFactors: rfcFactorType[] }) => {
         const id: string = selectedRow.values().next().value;
 
         //client-side validation
-        const factor_value = Number(formData.get('factor_value'))
-
-        if (isNaN(factor_value)) {
-            toast.custom((t) => <ErrorToast t={t} message={"amount is not a number"} />);
-            return;
-        }
-
         const damagedOragns = Array.from(damagedOrgans).join(", ");
 
         // client-side validation
         const result = RfcFactorSchema.safeParse({
             id: Number(id),
             name: formData.get('name'),
-            factor_value: factor_value,
+            rfC_value: formData.get('rfC_value'),
+            sF_value: formData.get('sF_value'),
+            gdK_value: formData.get('gdK_value'),
+            mass_flow_rate: formData.get('mass_flow_rate'),
             damaged_organs: damagedOragns
         });
         if (!result.success) {
@@ -210,10 +224,34 @@ const RfcFactorsLogics = ({ rfcFactors }: { rfcFactors: rfcFactorType[] }) => {
                             />
                             <CustomInput
                                 title='Amount'
-                                name='factor_value'
+                                name='rfC_value'
                                 handleChange={handleFormChange}
                                 color='primary'
-                                value={rfcFactorData.factor_value}
+                                value={rfcFactorData.rfC_value}
+                                required={true}
+                            />
+                            <CustomInput
+                                title='Sf'
+                                name='sF_value'
+                                handleChange={handleFormChange}
+                                color='primary'
+                                value={rfcFactorData.sF_value}
+                                required={true}
+                            />
+                            <CustomInput
+                                title='Gdk'
+                                name='gdK_value'
+                                handleChange={handleFormChange}
+                                color='primary'
+                                value={rfcFactorData.gdK_value}
+                                required={true}
+                            />
+                            <CustomInput
+                                title='MFR'
+                                name='mass_flow_rate'
+                                handleChange={handleFormChange}
+                                color='primary'
+                                value={rfcFactorData.mass_flow_rate}
                                 required={true}
                             />
 

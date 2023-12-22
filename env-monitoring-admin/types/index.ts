@@ -101,8 +101,12 @@ export interface PollutionType extends PollutionDataType {
 
 export interface rfcFactorDataType {
     name: string,
-    factor_value: string,
     damaged_organs?: string
+    rfC_value: string,
+    sF_value: string,
+    gdK_value: string,
+    mass_flow_rate: string
+
 }
 
 export interface rfcFactorType extends rfcFactorDataType {
