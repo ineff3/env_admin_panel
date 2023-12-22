@@ -35,6 +35,27 @@ export const getCompanies = async () => {
         return [];
     }
 };
+export const getCities = async () => {
+    const fetchOptions = {
+        method: 'GET',
+        agent,
+    };
+
+    try {
+        const response = await fetch(new URL('api/CityData', API_URL), fetchOptions);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json() as CustomServerResponse;
+
+        return data.result;
+    } catch (error) {
+        console.error('Error:', error);
+        return [];
+    }
+}
 
 export const addCompany = async (newCompany: unknown) => {
     const session = await getServerSession(authOptions)
@@ -58,7 +79,7 @@ export const addCompany = async (newCompany: unknown) => {
             body: JSON.stringify({
                 name: result.data.name,
                 description: result.data.description,
-                location: result.data.location
+                city_id: result.data.city_id
             }),
             agent
         };
@@ -98,7 +119,7 @@ export const editCompany = async (editedCompany: unknown) => {
                 id: result.data.id,
                 name: result.data.name,
                 description: result.data.description,
-                location: result.data.location
+                city_id: result.data.city_id
             }),
             agent
         };

@@ -4,12 +4,13 @@ import { RiArrowDownSLine } from "react-icons/ri";
 import { HiMiniMagnifyingGlass } from "react-icons/hi2";
 
 interface CustomSearchDropdownProps {
+    title: string
     items: string[]
     selected: string
     setSelected: (selected: string) => void
 }
 
-const CustomSearchDropdown = ({ items, selected, setSelected }: CustomSearchDropdownProps) => {
+const CustomSearchDropdown = ({ title, items, selected, setSelected }: CustomSearchDropdownProps) => {
     const [open, setOpen] = useState(false);
     const [inputValue, setInputValue] = useState('')
     const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -37,11 +38,11 @@ const CustomSearchDropdown = ({ items, selected, setSelected }: CustomSearchDrop
                 <div className={` text-gray-400 text-lg ${!selected && 'text-gray-400'}`}>
                     {selected ?
                         selected.length > 15 ? selected.substring(0, 12) + '...' : selected
-                        : 'Select RFC'}
+                        : title}
                 </div>
                 <RiArrowDownSLine size={25} className={` ${open && 'rotate-180'}`} />
             </div>
-            <ul className={` bg-white w-[193px] border border-[#d3d3d3] max-h-[243px] overflow-y-auto ${!open ? 'hidden' : 'absolute top-[52px]'} z-20`}>
+            <ul className={` bg-white w-[193px] border border-[#d3d3d3] max-h-[243px] overflow-y-auto ${!open ? 'hidden' : 'absolute top-[52px]'} z-40`}>
                 <div className='  flex items-center px-3 py-2 text-base text-[#7f7f7f] gap-2 border-b'>
                     <input
                         type="text"

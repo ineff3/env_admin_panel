@@ -235,6 +235,7 @@ const PollutionLogics = ({ pollutions, pollsWithRfcFactorsNames, rfcFactorsNames
                                 required={true}
                             />
                             <CustomSearchDropdown
+                                title='Select RFC'
                                 items={rfcFactorsNames}
                                 selected={selectedRfcFactor}
                                 setSelected={setSelectedRfcFactor}

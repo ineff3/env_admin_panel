@@ -1,6 +1,6 @@
 'use client';
-import { CompanyDataType, CompanyType, TableColumns } from '@/types'
-import { CustomInput, CustomTextArea, SuccessfulToast, ErrorToast, DynamicTable, CustomBtn } from '@/components';
+import { CityType, CompanyDataType, CompanyType, TableColumns } from '@/types'
+import { CustomInput, CustomTextArea, SuccessfulToast, ErrorToast, DynamicTable, CustomBtn, CustomSearchDropdown } from '@/components';
 import { AiOutlinePlus } from 'react-icons/ai'
 import { MdEditNote } from 'react-icons/md'
 import { useEffect, useState } from 'react';
@@ -20,18 +20,24 @@ const columns: TableColumns[] = [
         key: 'description'
     },
     {
-        name: 'LOCATION',
-        key: 'location'
+        name: 'CITY',
+        key: 'city_name'
     }
 ]
+interface Props {
+    companies: CompanyType[]
+    cities: CityType[]
+    companiesWithCityNames: any
+    cityNames: string[]
+}
 
-const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
+const CompanyLogics = ({ companies, cities, companiesWithCityNames, cityNames }: Props) => {
     const [companyData, setCompanyData] = useState<CompanyDataType>({
         name: '',
-        description: '',
-        location: ''
+        description: ''
     })
     const [selectedRow, setSelectedRow] = useState<Selection>(new Set());
+    const [selectedCity, setSelectedCity] = useState('')
 
     //Executes whenever selectedRow changes to some actual row
     useEffect(() => {
@@ -41,10 +47,11 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
             const selectedCompany = companies.find(company => company.id === +id);
 
             if (selectedCompany !== undefined) {
+                const cityName = getCityNameById(Number(selectedCompany.city_id))
+                setSelectedCity(cityName || '')
                 setCompanyData({
                     name: selectedCompany.name,
                     description: selectedCompany.description,
-                    location: selectedCompany.location
                 })
             }
         } else {
@@ -58,25 +65,31 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
             [e.target.name]: e.target.value
         })
     }
+    function getCityIdByName(cityName: string) {
+        return cities.find(city => city.name === cityName)?.id;
+    }
+    function getCityNameById(cityId: number) {
+        return cities.find(city => city.id === cityId)?.name;
+    }
 
     function resetFieldState() {
         setCompanyData({
             name: '',
             description: '',
-            location: ''
-
         });
+        setSelectedCity('')
     }
     function resetRow() {
         setSelectedRow(new Set());
     }
 
     const clientAddCompany = async (formData: FormData) => {
+        const cityId = getCityIdByName(selectedCity);
         // client-side validation
         const result = CompanySchema.safeParse({
             name: formData.get('name'),
             description: formData.get('description'),
-            location: formData.get('location')
+            city_id: cityId
         });
         if (!result.success) {
             let errorMessage = '';
@@ -107,12 +120,13 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
         }
         const id: string = selectedRow.values().next().value;
 
+        const cityId = getCityIdByName(selectedCity);
         //client-side validation
         const result = CompanySchema.safeParse({
             id: Number(id),
             name: formData.get('name'),
             description: formData.get('description'),
-            location: formData.get('location')
+            city_id: cityId
         });
         if (!result.success) {
             let errorMessage = '';
@@ -162,12 +176,11 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
                                 value={companyData.name}
                                 required={true}
                             />
-                            <CustomInput
-                                title='Location'
-                                name='location'
-                                handleChange={handleFormChange}
-                                color='primary'
-                                value={companyData.location}
+                            <CustomSearchDropdown
+                                title='Select city'
+                                items={cityNames}
+                                selected={selectedCity}
+                                setSelected={setSelectedCity}
                             />
                         </div>
                         <CustomTextArea
@@ -197,7 +210,7 @@ const CompanyLogics = ({ companies }: { companies: CompanyType[] }) => {
                 <div className=" max-w-[950px] flex flex-auto  ">
                     <DynamicTable
                         rowsLength={5}
-                        tableItems={companies}
+                        tableItems={companiesWithCityNames}
                         tableColumns={columns}
                         selectedRow={selectedRow}
                         setSelectedRow={setSelectedRow}

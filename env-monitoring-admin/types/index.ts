@@ -69,7 +69,7 @@ export interface CustomServerResponse {
 export interface CompanyDataType {
     name: string;
     description: string;
-    location: string
+    city_id?: string
 }
 export interface CompanyType extends CompanyDataType {
     id: number;
@@ -121,4 +121,12 @@ export interface UserDataType {
 
 export interface UserType extends UserDataType {
     id: string
+}
+
+export interface CityType {
+    id: number
+    name: string
+    population: number
+    isResort: boolean
+    region_id: number
 }

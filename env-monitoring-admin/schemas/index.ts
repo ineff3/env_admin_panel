@@ -13,7 +13,7 @@ export const CompanySchema = z.object({
         .min(1, { message: "Company name should be at least 1 character long" })
         .max(45, { message: "Company name should be at most 45 character long" }),
     description: z.string().trim(),
-    location: z.string().trim()
+    city_id: z.number().positive().int()
 });
 
 export const CompanyArraySchema = z.array(CompanySchema).nonempty({

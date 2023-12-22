@@ -18,7 +18,7 @@ const CustomTextArea = ({ title = "CustomTextArea", handleChange, color, name, v
             <textarea
                 required={required}
                 name={name}
-                className={` resize-none w-full h-40 text-lg focus:outline-none text-${color} focus:text-${color} z-50 bg-transparent myInput`}
+                className={` resize-none w-full h-40 text-lg focus:outline-none text-${color} focus:text-${color} z-20 bg-transparent myInput`}
                 onChange={(e) => {
                     setTextareaData(e.target.value);
                     handleChange(e);
