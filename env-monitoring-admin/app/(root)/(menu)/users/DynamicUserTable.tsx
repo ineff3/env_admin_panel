@@ -14,12 +14,11 @@ interface Props {
     selectedRow: Selection
     setSelectedRow: (selectedRow: Selection) => void;
     deleteItem: (id: string) => void;
-    withSearchBar?: boolean
-    filterFunction?: (items: any, filterValue: string) => typeof items
 }
 
 const DynamicUserTable = (
-    { rowsLength, tableItems, tableColumns, isLoading, selectedRow, setSelectedRow, deleteItem, withSearchBar, filterFunction }: Props) => {
+    { rowsLength, tableItems, tableColumns, isLoading, selectedRow, setSelectedRow, deleteItem
+    }: Props) => {
     const [filterValue, setFilterValue] = useState('');
     const [page, setPage] = useState(1);
     const [columns, setColumns] = useState([
@@ -30,28 +29,15 @@ const DynamicUserTable = (
         }
     ])
 
-    // filtering by a search field
-    const hasSearchFilter = Boolean(filterValue);
-    const filteredItems = useMemo(() => {
-        let filteredItems = [...tableItems];
-
-        if (hasSearchFilter) {
-            if (filterFunction) {
-                filteredItems = filterFunction(filteredItems, filterValue)
-            }
-        }
-        return filteredItems;
-    }, [filterValue, tableItems]);
-
     //Pagination logic
     const rowsPerPage = rowsLength;
-    const pages = Math.ceil(filteredItems.length / rowsPerPage);
+    const pages = Math.ceil(tableItems.length / rowsPerPage);
     const items = useMemo(() => {
         const start = (page - 1) * rowsPerPage;
         const end = start + rowsPerPage;
 
-        return filteredItems.slice(start, end);
-    }, [page, filteredItems]);
+        return tableItems.slice(start, end);
+    }, [page, tableItems]);
 
     // cells rendering
     const renderCell = useCallback((company: any, columnKey: React.Key, itemId: string) => {
@@ -110,7 +96,6 @@ const DynamicUserTable = (
             selectionMode="single"
             selectedKeys={selectedRow}
             onSelectionChange={setSelectedRow}
-            topContent={withSearchBar ? topContent : <></>}
             bottomContent={isLoading || tableItems.length === 0 ? <></> :
                 <div className="flex w-full justify-center">
                     <Pagination
